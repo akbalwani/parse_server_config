@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd" name="ServiceMaintenance.xml">
+    <rule name="ServiceBounce" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                   <attribute>EventType</attribute>
+                   <comparator name="equal" />
+                   <value>ServiceMaintenance - bounce</value>
+               </item>
+           </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.BounceRuleEngineAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+    <rule name="ServiceSyncStart" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                   <attribute>EventType</attribute>
+                   <comparator name="equal" />
+                   <value>ServiceMaintenance - syncstart</value>
+               </item>
+           </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SyncStartAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+    <rule name="ServiceSyncEnd" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                   <attribute>EventType</attribute>
+                   <comparator name="equal" />
+                   <value>ServiceMaintenance - syncend</value>
+               </item>
+           </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SyncEndAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+</brpackage>

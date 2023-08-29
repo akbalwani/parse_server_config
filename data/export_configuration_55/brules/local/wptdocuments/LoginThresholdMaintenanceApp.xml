@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="LoginThresholdMaintenanceApp.xml" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd">
+    <rule name="Login Threshold Maintenance Application" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Application - Schedule</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                    <comparator name="equal" />
+                    <value>LoginThresholdMaintenance</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" class="com.axway.st.server.loginthreshold.agents.LoginThresholdMaintenanceAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+</brpackage>

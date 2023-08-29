@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Transformations>
+    <Incoming>
+        <Transformation type="PGP" direction="Incoming" SentinelEventStarting="DECRYPTING" SentinelEventCompleted="DECRYPTED"/>
+    </Incoming>
+
+    <Outgoing>
+        <Transformation type="PGP" direction="Outgoing" SentinelEventStarting="ENCRYPTING" SentinelEventCompleted="ENCRYPTED"/>
+    </Outgoing>
+</Transformations>

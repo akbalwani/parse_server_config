@@ -1,0 +1,4495 @@
+<?xml version="1.0" encoding="UTF-8"?><brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Streaming.xml" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd">
+    <!-- PREPROCESS RULE: Transfer Finalizer Rule -->
+    
+    <rule name="TransferFinalizer" precedence="8" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming end</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming error</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming abort</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing end</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing error</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing abort</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.TransferFinalizerAgent" executeafter="1" id="2" streamaccess="all" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- PREPROCESS RULE: Time Stamp and Persist Rule -->
+    
+    <rule name="TimeStampAndPersist" precedence="10" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Schedule</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming end</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming error</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming abort</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing end</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing error</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing abort</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Server Transfer - Push</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Server Transfer - Pull</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Application - PackagePostCommit</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>AdvancedRouting execute</value>
+                    
+                </item>
+                <!-- Uncomment the following if you want to enable the PGP Event type distribution -->
+                <!--
+                <operator name="or" />
+                <expression>
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Transformation</value>
+                    </item>
+                    <operator name="and" />
+                    <item>
+                        <attribute>DXAGENT_TRANSFORMATION_TYPE</attribute>
+                        <comparator name="equal" />
+                        <value>PGP</value>
+                    </item>
+                </expression>
+                -->
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.TimeStamp" executeafter="" id="1" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.PersistAgent" executeafter="1" id="2" streamaccess="all" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- PREPROCESS RULE: AccountContext -->
+    
+    <rule name="AccountContext" precedence="11" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="not-equal"/>
+                    
+                    <value>User Configuration</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="not-equal"/>
+                    
+                    <value>Certificate Verification</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="not-equal"/>
+                    
+                    <value>Certificate Trust</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="not-equal"/>
+                    
+                    <value>Password Authentication</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>DXAGENT_ACCOUNT_ID</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value/>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <expression>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_LOGINNAME</attribute>
+                        
+                        <comparator name="match"/>
+                        
+                        <value>.+</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_ACCOUNT_NAME</attribute>
+                        
+                        <comparator name="match"/>
+                        
+                        <value>.+</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_SCHEDULED_TYPE</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>subscription</value>
+                        
+                    </item>
+                    
+                </expression>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.AccountContextAgent" executeafter="" id="1" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- PREPROCESS RULE: Virtual Access Check Rules -->
+    
+    <rule name="VirtualAccessCheck" precedence="20" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming start</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing start</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RETR</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - STOR</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - LIST</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - NLST</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - DELE</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - SIZE</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RTCK</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - CWD</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - MKD</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RMD</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RNFR</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RNTO</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - CHMOD</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - REST</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - COMB</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - UMASK</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>AccessCheck - download</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FileMetadata - read</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FileMetadata - update</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.VirtualAccessCheckAgent" executeafter="" id="1" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.LoginRestrictionPolicyAgent" executeafter="1" id="2" streamaccess="none"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.UsersSessionAgent" executeafter="2" id="3" streamaccess="none"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="3" id="4" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- Path Mapping Rules -->
+    
+    <rule name="PathMapping" precedence="21" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming start</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing start</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RETR</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - STOR</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - LIST</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - NLST</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - DELE</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - MDTM</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - SIZE</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RTCK</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - CWD</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - MKD</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RMD</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RNFR</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RNTO</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - CHMOD</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming abort</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing abort</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming error</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing error</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming end</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing end</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Server Transfer - Pull</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Server Transfer - Push</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Application - Incoming</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Application - Schedule</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - COMB</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Pesit resume</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Pesit pause</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FileMetadata - read</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FileMetadata - update</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.VirtualPathMappingAgent" executeafter="" id="1" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.PathMappingAgent" executeafter="1" id="2" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="2" id="3" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- PREPROCESS RULE: Convert STATE_KEY_REST state variable to DXAGENT_OFFSET env. variable -->
+    
+    <rule name="RestToOffset" precedence="22" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RETR</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - STOR</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - REST</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.RestToOffsetAgent" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- PREPROCESS RULE: Certificate Verification Rules  -->
+    
+    <rule name="PreProcess_CertVerify" precedence="23" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Certificate Verification</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.axway.st.server.plugins.authentication.agent.PluginAuthCertAgent" executeafter="" id="1" streamaccess="output" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.CertificatePreProcessAgent" executeafter="1" id="2" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.CertificateBasicValidationAgent" executeafter="2" id="3" streamaccess="output" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="3" id="4" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- PREPROCESS RULE: User Configuration Rules  -->
+    
+    <rule name="PreProcess_Config" precedence="23" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>User Configuration</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.ConfigAgentCache" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- PREPROCESS RULE: Login Rules  -->
+    
+    <rule name="PreProcess_Login" precedence="23" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Login</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.AccountInitializationAgent" executeafter="" id="1" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.axway.st.server.plugins.authentication.agent.PluginAccountInitializationAgent" executeafter="1" id="2" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="2" id="3" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="PreProcess_LoginMapping" precedence="24" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Login</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.LoginMappingAgent" executeafter="" id="1" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- PREPROCESS RULE: SiteMinder Access -->
+    
+    <rule name="Read" precedence="24" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Outgoing start</value>
+                
+            </item>
+            
+            <operator name="or"/>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - LIST</value>
+                
+            </item>
+            
+            <operator name="or"/>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - NLST</value>
+                
+            </item>
+            
+            <operator name="or"/>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - MDTM</value>
+                
+            </item>
+            
+            <operator name="or"/>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - SIZE</value>
+                
+            </item>
+            
+            <operator name="or"/>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - RTCK</value>
+                
+            </item>
+            
+            <operator name="or"/>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - CWD</value>
+                
+            </item>
+            
+            <operator name="or"/>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FileMetadata - read</value>
+                
+            </item>
+            
+            <operator name="or"/>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FileMetadata - update</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.siteminder.agents.AccessAgent" executeafter="" id="1" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                    <param>
+                        
+                        <param-name>targetAccess</param-name>
+                        
+                        <param-value>GET</param-value>
+                        
+                    </param>
+                    
+                    <param>
+                        
+                        <param-name>parentAccess</param-name>
+                        
+                        <param-value>none</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="Write" precedence="24" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Incoming start</value>
+                
+            </item>
+            
+            <operator name="or"/>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - RMD</value>
+                
+            </item>
+            
+            <operator name="or"/>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - RNTO</value>
+                
+            </item>
+            
+            <operator name="or"/>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - DELE</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.siteminder.agents.AccessAgent" executeafter="" id="1" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                    <param>
+                        
+                        <param-name>targetAccess</param-name>
+                        
+                        <param-value>PUT</param-value>
+                        
+                    </param>
+                    
+                    <param>
+                        
+                        <param-name>parentAccess</param-name>
+                        
+                        <param-value>PUT</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="ParentWrite" precedence="24" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - CHMOD</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.siteminder.agents.AccessAgent" executeafter="" id="1" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                    <param>
+                        
+                        <param-name>targetAccess</param-name>
+                        
+                        <param-value>PUT</param-value>
+                        
+                    </param>
+                    
+                    <param>
+                        
+                        <param-name>parentAccess</param-name>
+                        
+                        <param-value>none</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- PREPROCESS RULE: Application Context -->
+    
+    <rule name="ApplicationContext" precedence="25" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Server Transfer - Pull</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming start</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing start</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming end</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing end</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming error</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing error</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming abort</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing abort</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RNTO</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.ApplicationContextAgent" executeafter="" id="1" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.ApplicationMappingAgent" executeafter="1" id="2" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="2" id="3" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- LAST PREPROCESS RULE: Generic rule for situations that need reevaluation of ruleset -->
+    
+    <rule name="ReEval" precedence="26" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="not-equal"/>
+                    
+                    <value>User Configuration</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="not-equal"/>
+                    
+                    <value>Certificate Verification</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="not-equal"/>
+                    
+                    <value>Certificate Trust</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="not-equal"/>
+                    
+                    <value>Password Authentication</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>reevaluateRules</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="AttributesPersist_Transfer_End" precedence="30" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Incoming end</value>
+                
+            </item>
+            
+            <operator name="or"/>
+            
+            <expression>
+                
+                <expression>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Outgoing end</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Incoming abort</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Outgoing abort</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Incoming error</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Outgoing error</value>
+                        
+                    </item>
+                    
+                </expression>
+                
+                <operator name="and"/>
+                
+                <not>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_PROTOCOL</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>ftp-comb</value>
+                        
+                    </item>
+                    
+                    <operator name="and"/>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_TARGET</attribute>
+                        
+                        <comparator name="match"/>
+                        
+                        <value>.*\.tmp</value>
+                        
+                    </item>
+                    
+                </not>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.AttributesPersistAgent" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- POST PROCESS RULE : TransferLog. Calls main/default rule via NextPrecedence -->
+    
+    <rule name="TransferLog_Start" precedence="30" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <expression>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Incoming start</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Outgoing start</value>
+                        
+                    </item>
+                    
+                </expression>
+                
+                <operator name="and"/>
+                
+                <not>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_PROTOCOL</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>ftp-comb</value>
+                        
+                    </item>
+                    
+                    <operator name="and"/>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_TARGET</attribute>
+                        
+                        <comparator name="match"/>
+                        
+                        <value>.*\.tmp</value>
+                        
+                    </item>
+                    
+                </not>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.Continue" executeafter="1" id="2" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>continue</param-name>
+                        
+                        <param-value>"-2 0"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.TimeStamp" executeafter="2" id="3" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.TransferLogAgent" executeafter="3" id="4" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+        </action>
+        
+    </rule>
+    <!-- POSTPROCESS RULE: Transferlog error and abort -->
+    
+    <rule name="TransferLog_Error_Abort" precedence="30" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <expression>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Incoming abort</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Outgoing abort</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Incoming error</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Outgoing error</value>
+                        
+                    </item>
+                    
+                </expression>
+                
+                <operator name="and"/>
+                
+                <not>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_PROTOCOL</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>ftp-comb</value>
+                        
+                    </item>
+                    
+                    <operator name="and"/>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_TARGET</attribute>
+                        
+                        <comparator name="match"/>
+                        
+                        <value>.*\.tmp</value>
+                        
+                    </item>
+                    
+                </not>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.TransferLogAgent" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="PostProcess_Rnto" precedence="30" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - RNTO</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.TransferLogAgent" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.axway.st.server.route.core.agents.AdvancedRoutingAppAgent" executeafter="2" id="3" streamaccess="none"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.ApplicationController" executeafter="3" id="4" streamaccess="all" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="PostProcess_Incoming_End" precedence="30" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Incoming end</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.ApplicationController" executeafter="1" id="2" streamaccess="all" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.TransferLogAgent" executeafter="2" id="3" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="PostProcess_Outgoing_End" precedence="30" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Outgoing end</value>
+                
+            </item>
+            
+            <operator name="and"/>
+            
+            <not>
+                
+                <item>
+                    
+                    <attribute>DXAGENT_PROTOCOL</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>ftp-comb</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>DXAGENT_TARGET</attribute>
+                    
+                    <comparator name="match"/>
+                    
+                    <value>.*\.tmp</value>
+                    
+                </item>
+                
+            </not>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.TransferLogAgent" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- MAIN RULE -->
+    
+    <rule name="CertVerify" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Certificate Verification</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.siteminder.agents.CertVerifyAgent" executeafter="" id="1" streamaccess="output" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.CertificateUserStoreAgent" executeafter="1" id="2" streamaccess="output" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>confirmMessage</param-name>
+                        
+                        <param-value>"false"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="2" id="3" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="FinalProcess_Config" precedence="30" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>User Configuration</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.Continue" executeafter="1" id="2" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>continue</param-name>
+                        
+                        <param-value>"0"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.ConfigFinalizer" executeafter="2" id="3" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="PostProcess_Config" precedence="35" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>User Configuration</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.Continue" executeafter="1" id="2" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>continue</param-name>
+                        
+                        <param-value>"0"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.UserRestrictionsConfigAgent" executeafter="2" id="3" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.LdapPostConfigAgent" executeafter="3" id="4" streamaccess="all" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.ConfigVFSMappingAgent" executeafter="4" id="5" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.ConfigPasswordPolicyAgent" executeafter="5" id="6" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.siteminder.agents.SiteMinderPostConfigAgent" executeafter="6" id="7" streamaccess="all" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="PostProcess_ConfigTemplateMapping" precedence="41" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>User Configuration</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.Continue" executeafter="1" id="2" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>continue</param-name>
+                        
+                        <param-value>"0"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.ConfigMappingAgent" executeafter="2" id="3" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.AccountInstantiationAgent" executeafter="3" id="4" streamaccess="all" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="PostProcess_DualPerUserClass" precedence="39" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>User Configuration</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <expression>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_CLIENT</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>httpd</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_CLIENT</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>ftpd</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_CLIENT</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>sshd</value>
+                        
+                    </item>
+                    
+                </expression>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.Continue" executeafter="1" id="2" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>continue</param-name>
+                        
+                        <param-value>"0"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.DualPerUserClassAgent" executeafter="2" id="3" streamaccess="none"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="PostProcess_LoginRestrictionPolicy" precedence="40" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>User Configuration</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <expression>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_CLIENT</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>httpd</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_CLIENT</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>ftpd</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_CLIENT</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>sshd</value>
+                        
+                    </item>
+                    
+                </expression>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.Continue" executeafter="1" id="2" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>continue</param-name>
+                        
+                        <param-value>"0"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.LoginRestrictionPolicyAgent" executeafter="2" id="3" streamaccess="none"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="PostProcess_ConfigClass" precedence="45" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>User Configuration</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.Continue" executeafter="1" id="2" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>continue</param-name>
+                        
+                        <param-value>"0"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.ClassAgent" executeafter="2" id="3" streamaccess="all" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="PostProcess_ConfigAccount" precedence="49" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>User Configuration</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.AccountConfigAgent" executeafter="1" id="2" streamaccess="all" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="AccountResolve" precedence="40" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>DXAGENT_CLIENT</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>server</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <expression>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Outgoing start</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Outgoing error</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Outgoing abort</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Incoming start</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Incoming error</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Incoming abort</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>PMcommit</value>
+                        
+                    </item>
+                    
+                </expression>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.AccountResolveAgent" executeafter="" id="1" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- MAIN RULE -->
+    
+    <rule name="Config" precedence="100" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>User Configuration</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>DXAGENT_CLIENT</attribute>
+                    
+                    <comparator name="not-equal"/>
+                    
+                    <value>pesit</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.CommonSsoUserConfigAgent" executeafter="" id="1" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.axway.st.server.plugins.authentication.agent.PluginAuthConfigAgent" executeafter="1" id="2" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.VirtualUserConfigAgent" executeafter="2" id="3" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.LdapConfigAgent" executeafter="3" id="4" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.RealUserConfigAgent" executeafter="4" id="5" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.siteminder.agents.ConfigAgent" executeafter="5" id="6" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="6" id="7" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- Incoming Abort Rules -->
+    
+    <rule name="Incoming_Abort" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Incoming abort</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="all" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="PostProcess_CertVerify" precedence="500" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Certificate Verification</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.CertificateFailureAgent" executeafter="" id="1" streamaccess="output" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- Authentication Rules  -->
+    
+    <rule name="Auth" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Password Authentication</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.AuthAgent" executeafter="" id="1" streamaccess="all" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>AuthCookie</param-name>
+                        
+                        <param-value>AuthAgent/Cookie</param-value>
+                        
+                    </param>
+                    
+                    <param>
+                        
+                        <param-name>AuthMessage</param-name>
+                        
+                        <param-value>No</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.Continue" executeafter="1" id="2" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>stop</param-name>
+                        
+                        <param-value>"2 0 -1 -2 -4 -5 -10"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="2" id="3" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- Change Password Rules  -->
+    
+    <rule name="Chpwd" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - CHPWD</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.ChangePasswordAgent" executeafter="" id="1" streamaccess="all" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.Continue" executeafter="1" id="2" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>stop</param-name>
+                        
+                        <param-value>"0 -1 -2 -6"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.siteminder.agents.PasswordAgent" executeafter="2" id="3" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="3" id="4" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="Login" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Login</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.LoginAgent" executeafter="" id="1" streamaccess="all" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- Logout Rules  -->
+    
+    <rule name="Logout" precedence="100" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Logout</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Logout getmessage</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.siteminder.agents.LogoutAgent" executeafter="" id="1" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.CommonSingleLogoutAgent" executeafter="1" id="2" streamaccess="yes" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.LogoutAgent" executeafter="2" id="3" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                    <param>
+                        
+                        <param-name>LogoutMessage</param-name>
+                        
+                        <param-value>No</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="3" id="4" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="SessionCleanup" precedence="500" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Logout</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Session End</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.CleanupAgent" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- Outgoing Abort Rules -->
+    
+    <rule name="Outgoing_Abort" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Outgoing abort</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="all" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- Incoming Error Rules -->
+    
+    <rule name="Incoming_Error" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Incoming error</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="all" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- Outgoing Error Rules -->
+    
+    <rule name="Outgoing_Error" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Outgoing error</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="all" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="Mkdir" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - MKD</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.MkdirAgent" executeafter="" id="1" streamaccess="none">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="Rmdir" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - RMD</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.RmdAgent" executeafter="" id="1" streamaccess="none">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="Rnfr" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - RNFR</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.RnFrAgent" executeafter="" id="1" streamaccess="none">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="Rnto" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - RNTO</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.RnToAgent" executeafter="" id="1" streamaccess="none">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="Chmod" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - CHMOD</value>
+                
+            </item>
+            
+            <operator name="and"/>
+            
+            <item>
+                
+                <attribute>OS</attribute>
+                
+                <comparator name="not-equal"/>
+                
+                <value>Windows</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.ChmodAgent" executeafter="" id="1" streamaccess="none"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="ChmodWindows" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - CHMOD</value>
+                
+            </item>
+            
+            <operator name="and"/>
+            
+            <item>
+                
+                <attribute>OS</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Windows</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.Continue" executeafter="1" id="2" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>continue</param-name>
+                        
+                        <param-value>"0"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+        </action>
+        
+    </rule>
+    <!-- Certificate Trust Rules -->
+    
+    <rule name="Certificate Trust" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Certificate Trust</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.CertificateTrustAgent" executeafter="" id="1" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- Schedule Rules -->
+    
+    <rule name="Schedule" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Schedule</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.ApplicationController" executeafter="" id="1" streamaccess="all" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="PostTransmission" precedence="31" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming end</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming error</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming abort</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing end</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing error</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing abort</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value> true</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.pta.agents.PostTransmissionAgent" executeafter="1" id="2" streamaccess="none">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value> true</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="PesitRouting" precedence="32" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming end</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>DXAGENT_CLIENT</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>pesit</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.SendToSiteAgent" executeafter="" id="1" streamaccess="none"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="TransferLogDele" precedence="19" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - DELE</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.TransferLogAgent" executeafter="1" id="2" streamaccess="none"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="TransferLogRnFr" precedence="19" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>FTP Cmd - RNFR</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.TransferLogAgent" executeafter="1" id="2" streamaccess="none"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="MarkCheck" precedence="48" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing start</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - DELE</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RETR</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - CHMOD</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - MDTM</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RNFR</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RNTO</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RTCK</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - SIZE</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FileMetadata - read</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FileMetadata - update</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.MarkedCheckAgent" executeafter="" id="1" streamaccess="none"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="PostTemplate" precedence="20" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>HTTP Cmd - POST</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>DXAGENT_EXTRAARGS</attribute>
+                    
+                    <comparator name="contain"/>
+                    
+                    <value>template</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.TemplateAgent" executeafter="" id="1" streamaccess="none">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>messagetemplate</param-name>
+                        
+                        <param-value>WebClientOutOfLicense.xhtml</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="TransformationBaffle" precedence="20" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>Transformation</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.TransformationBaffleAgent" executeafter="" id="1" streamaccess="none" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"false"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="RepEnc_CertCheck" precedence="19" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>DXAGENT_USERCLASS</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>EncryptClass</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <expression>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Incoming start</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Outgoing start</value>
+                        
+                    </item>
+                    
+                </expression>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.RepEncCertificateValidationAgent" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="RetrieveAccount" precedence="100" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Retrieve Account</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.RetrieveAccountAgent" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="SITCleanup" precedence="16" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <expression>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Server Transfer - Pull</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Server Transfer - Push</value>
+                        
+                    </item>
+                    
+                </expression>
+                
+                <operator name="and"/>
+                
+                <expression>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_PERSISTED_EVENT</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>true</value>
+                        
+                    </item>
+                    
+                    <operator name="and"/>
+                    
+                    <expression>
+                        
+                        <item>
+                            
+                            <attribute>DXAGENT_IS_API_CALL</attribute>
+                            
+                            <comparator name="equal"/>
+                            
+                            <value>false</value>
+                            
+                        </item>
+                        
+                        <operator name="or"/>
+                        
+                        <item>
+                            
+                            <attribute>DXAGENT_IS_ROUTING_CALL</attribute>
+                            
+                            <comparator name="equal"/>
+                            
+                            <value>false</value>
+                            
+                        </item>
+                        
+                    </expression>
+                    
+                </expression>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.CleanupAgent" executeafter="1" id="2" streamaccess="none"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="AbortedTransferSessionCleanup" precedence="7" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming abort</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="all" wait="yes"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.CleanupAgent" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    <!-- POSTPROCESS RULE: Flow Context -->
+    
+    <rule name="FlowContext" precedence="28" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming end</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.FlowContextAgent" executeafter="" id="1" streamaccess="none">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none"/>
+            
+        </action>
+        
+    </rule>
+    <!-- Secret question set rule. -->
+    
+    <rule name="SecretQuestion" precedence="100" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>AccountUpdate - secretQuestion</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.SecretQuestionSetAgent" executeafter="" id="1" streamaccess="all" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="FlowContextOnMove" precedence="105" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>FTP Cmd - RNTO</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.appframework.FlowContextAgent" executeafter="" id="1" streamaccess="none">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="CycleId" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal"/>
+                    <value>Server Transfer - Push</value>
+                </item>
+                <operator name="or"/>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal"/>
+                    <value>Server Transfer - Pull</value>
+                </item>
+                <operator name="or"/>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal"/>
+                    <value>FTP Cmd - STOR</value>
+                </item>
+                <operator name="or"/>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal"/>
+                    <value>Incoming end</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.CycleIdAgent"/>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+</brpackage>

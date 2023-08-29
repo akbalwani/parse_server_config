@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd" name="AddressBookManager.xml">  
+   <rule name="AddressBookRetrieve" type="static" precedence = "50">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>AddressBook - retrieveentry</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.addressbook.agents.AddressBookEntryRetrieveAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+    <rule name="AddressBookCount" type="static" precedence = "50">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>AddressBook - countentries</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.addressbook.agents.AddressBookEntryCountAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+    <rule name="AddressBookSettings" type="static" precedence = "50">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>AddressBook - settings</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.addressbook.agents.AddressBookSettingsAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+    <rule name="AddressBookValidate" type="static" precedence = "50">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>AddressBook - validate</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.addressbook.agents.AddressBookValidateAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+</brpackage>

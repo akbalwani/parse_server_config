@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- @(#) $Id: FolderTransfer.xml,v 1.8 2006-07-28 00:07:01 ygoulishev Exp $ --><!-- Do not delete the SecureTransport VERSION line below. --><!-- ~VERSION~ 1 --><brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="FolderTransfer.xml" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd">
+    
+    <rule name="FolderTransfer" precedence="100" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <expression>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Server Transfer - Pull</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Server Transfer - Push</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal"/>
+                        <value>Server Transfer - Testlist</value>
+                    </item>
+                </expression>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>folder</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>DXAGENT_SITE_ATTR_REST_FOLDER_TRAVERSE</attribute>
+                    
+                    <comparator name="not-equal"/>
+                    
+                    <value>1</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.folder.agent.FolderTransferAgent" executeafter="" id="1" streamaccess="none">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.RetryAgent" executeafter="1" id="2" streamaccess="none">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                    <param>
+                        <!-- the event exit code for which the retry agent should flag a retry to the event queue -->
+                        
+                        <param-name>dontretry</param-name>
+                        
+                        <param-value>"0 1 2 3 4 5"</param-value>
+                        
+                    </param>
+                    
+                    <param>
+                        
+                        <param-name>internalretry</param-name>
+                        
+                        <param-value>"6"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.Continue" executeafter="2" id="3" streamaccess="none">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>continue</param-name>
+                        
+                        <param-value>"0 1 2 4 5"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="FolderTraverse" precedence="99" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Server Transfer - Pull</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>folder</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <expression>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_SUBSCRIPTION_ATTR_SCHEDULEDFOLDERMONITOR</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>1</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_SITE_ATTR_REST_FOLDER_TRAVERSE</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>1</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_API_CALL</attribute>
+                        
+                        <comparator name="match"/>
+                        
+                        <value>TransferPull.*</value>
+                        
+                    </item>
+                    
+                </expression>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.folder.agent.FolderTraverseAgent" executeafter="" id="1" streamaccess="none">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+        </action>
+        
+    </rule>
+    
+</brpackage>

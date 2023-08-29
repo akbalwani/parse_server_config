@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- @(#) $Id: SynchronyTransfer.xml,v 1.1.2.9 2009-09-28 14:37:49 vlalov Exp $ -->
+<!-- Do not delete the SecureTransport VERSION line below. -->
+<!-- ~VERSION~ 1 -->
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="AxwayTransferCFT.xml" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd">
+    <rule name="AxwayTransferCFT" type="static" precedence="100">
+        <condition>
+            <expression>
+                <expression>
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Server Transfer - Pull</value>
+                    </item>
+                    <operator name="or" />
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Server Transfer - Push</value>
+                    </item>
+                </expression>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                    <comparator name="equal" />
+                    <value>synchrony transfer</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" class="com.tumbleweed.st.server.synchronytransfer.agent.SynchronyTransferAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.RetryAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                    <param>
+                        <!-- the event exit code for which the retry agent should flag a retry to the event queue -->
+                        <param-name>dontretry</param-name><param-value>"0 1 2 4 5"</param-value>
+                    </param>
+                    <param>
+                        <param-name>internalretry</param-name><param-value>"6"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="3" executeafter="2" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.Continue">
+                <params>
+                    <param>
+                        <param-name>continue</param-name>
+                        <param-value>"0 1 2 4 5"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="AxwayTransferCFTApplication" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal"/>
+                    <value>Application - Incoming</value>
+                </item>
+                <operator name="and"/>
+                <item>
+                    <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                    <comparator name="equal"/>
+                    <value>SynchronyTransfer</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none"
+                    class="com.tumbleweed.st.server.synchronytransfer.agent.SynchronyTransferAppAgent"/>
+        </action>
+    </rule>
+    <rule name="AxwayTransferCFTReceiving" type="static" precedence="90">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Synchrony Transfer</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.synchronytransfer.agent.SynchronyTransferReceivingAgent"/>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="3" executeafter="2" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.CleanupAgent" />
+        </action>
+    </rule>
+</brpackage>
+

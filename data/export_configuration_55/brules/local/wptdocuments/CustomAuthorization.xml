@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd" name="CustomAuthorization.xml">
+    
+        <!-- Pluggable Authorization Execution -->
+    <rule name="CustomAuthorizationCheck" type="static" precedence="17">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FTP Cmd - DELE</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FTP Cmd - RNFR</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FTP Cmd - MKD</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FTP Cmd - CWD</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FTP Cmd - RMD</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FTP Cmd - LIST</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FTP Cmd - NLST</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FTP Cmd - CHMOD</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Incoming start</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Outgoing start</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.VirtualPathMappingAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.PathMappingAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="3" executeafter="2" streamaccess="none" wait="yes" class="com.axway.st.server.plugins.authorization.agent.CustomAuthorizationAgent" />
+            <inprocess-agent id="4" executeafter="3" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+
+</brpackage>

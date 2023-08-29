@@ -1,0 +1,17 @@
+#
+# @(#) $Id: sync.excl,v 1.6 2005-07-12 20:04:20 steveb Exp $
+#
+# Do not delete the SecureTransport VERSION line below.
+# ~VERSION~ 1
+#
+# Master -> Slave Server Synchronization Exclusion List
+#
+# DO NOT replicate any files list herein
+#
+
+conf/versions.txt
+lib/msgs/msg.shut
+tomcat/as2/conf/server.xml
+lib/certs/db/internalDB-root-ca.pem
+lib/certs/db/internalDB-server-key.pem
+lib/certs/db/internalDB-server-cert.pem

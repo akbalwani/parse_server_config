@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- @(#) $Id: StandardRouter.xml,v 1.12 2007-04-06 14:31:27 tslavkov Exp $ -->
+<!-- Do not delete the SecureTransport VERSION line below. -->
+<!-- ~VERSION~ 1 -->
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="StandardRouter.xml" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd">
+    <rule name="StandardRouterApplication" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Application - Incoming</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                    <comparator name="equal" />
+                    <value>StandardRouter</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.routerapp.agents.RouterAppAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    
+    <rule name="StandardRouterSubscription" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Application - Init</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                    <comparator name="equal" />
+                    <value>StandardRouter</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.routerapp.agents.RouterSubscriptionAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    
+    <rule name="StandardRouterPreprocessing" type="static" precedence="27">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Incoming start</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                    <comparator name="equal" />
+                    <value>StandardRouter</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.routerapp.agents.RouterTransferCheckAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />            
+        </action>
+    </rule>
+
+</brpackage>
+

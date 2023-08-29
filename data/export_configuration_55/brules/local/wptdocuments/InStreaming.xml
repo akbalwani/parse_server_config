@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd" name="InStreaming.xml">
+   <rule name="Incoming_Start" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Incoming start</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.StartAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Outgoing_Start" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Outgoing start</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.StartAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Incoming_End" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Incoming end</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.EndAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+
+
+    <rule name="Outgoing_End" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Outgoing end</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.EndAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+
+    <rule name="Retrieve" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>FTP Cmd - RETR</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" wait="yes" class="com.tumbleweed.st.server.tm.agents.RetrAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="FilenameCollisionResolution" type="static" precedence="31">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Incoming start</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" wait="yes" class="com.tumbleweed.st.server.tm.agents.FilenameCollisionResolutionAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="all" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+    <rule name="Store" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>FTP Cmd - STOR</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" wait="yes" class="com.tumbleweed.st.server.tm.agents.StorAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Comb" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>FTP Cmd - COMB</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.CombAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="List" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>FTP Cmd - LIST</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" wait="yes" class="com.axway.st.server.plugins.authorization.agent.CustomListAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                    <param>
+                        <param-name>FORCE_TOTAL_EVEN_IF_HTTP_NO_FILES</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.Continue">
+                <params>
+                    <param>
+                        <param-name>continue</param-name><param-value>"1"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="3" executeafter="2" streamaccess="all" wait="yes" class="com.tumbleweed.st.server.tm.agents.ListAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                    <param>
+                        <param-name>FORCE_TOTAL_EVEN_IF_HTTP_NO_FILES</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="4" executeafter="3" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.Continue">
+                <params>
+                    <param>
+                        <!-- Fall back to the external list agent if there is unrecognized option -->
+                        <param-name>continue</param-name><param-value>"1"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+
+            <external-agent id="5" executeafter="4" streamaccess="all" wait="yes">
+                <commandline>"${FILEDRIVEHOME}/bin/utils/runas"  "${FILEDRIVEHOME}/bin/utils/list"</commandline>
+            </external-agent>
+        </action>
+    </rule>
+    <rule name="Nlst" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>FTP Cmd - NLST</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" wait="yes" class="com.axway.st.server.plugins.authorization.agent.CustomListAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                    <param>
+                        <param-name>FORCE_TOTAL_EVEN_IF_HTTP_NO_FILES</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.Continue">
+                <params>
+                    <param>
+                        <param-name>continue</param-name><param-value>"1"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="3" executeafter="2" streamaccess="all" wait="yes" class="com.tumbleweed.st.server.tm.agents.ListAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                    <param>
+                        <param-name>FORCE_TOTAL_EVEN_IF_HTTP_NO_FILES</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="4" executeafter="3" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.Continue">
+                <params>
+                    <param>
+                        <!-- Fall back to the external list agent if there is unrecognized option -->
+                        <param-name>continue</param-name><param-value>"1"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+
+            <external-agent id="5" executeafter="4" streamaccess="all" wait="yes">
+                <commandline>"${FILEDRIVEHOME}/bin/utils/runas"  "${FILEDRIVEHOME}/bin/utils/list"</commandline>
+            </external-agent>
+        </action>
+    </rule>
+    <rule name="Delete" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>FTP Cmd - DELE</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.DeleAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Mdtm" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>FTP Cmd - MDTM</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" wait="yes" class="com.tumbleweed.st.server.tm.agents.MdtmAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Size" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>FTP Cmd - SIZE</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" wait="yes" class="com.tumbleweed.st.server.tm.agents.SizeAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Rtck" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>FTP Cmd - RTCK</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" wait="yes" class="com.tumbleweed.st.server.tm.agents.RtckAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="FileMetadata" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FileMetadata - read</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FileMetadata - update</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" wait="yes" class="com.tumbleweed.st.server.tm.agents.FileMetadataAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+   </rule>        
+   <rule name="Cwd" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>FTP Cmd - CWD</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.CwdAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Pwd" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>FTP Cmd - PWD</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" class="com.tumbleweed.st.server.tm.agents.PwdAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+</brpackage>

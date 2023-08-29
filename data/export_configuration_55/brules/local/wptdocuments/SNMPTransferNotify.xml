@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd" name="SNMPTransferNotify.xml">
+	<rule name="SNMPTransferFailedNotify" type="static" precedence="99">
+		<condition>
+		<expression>
+			<expression>
+				<expression>
+					<expression>
+						<item>
+							<attribute>EventType</attribute>
+							<comparator name="equal" />
+							<value>Incoming error</value>
+						</item>
+						<operator name="or" />
+						<item>
+							<attribute>EventType</attribute>
+							<comparator name="equal" />
+							<value>Outgoing error</value>
+						</item>
+					</expression>
+					<operator name="and" />
+					<expression>
+						<item>
+							<attribute>DXAGENT_SERVER_TRANSFER_IS_PERMANENT_FAILURE</attribute>
+							<comparator name="equal" />
+							<value>1</value>
+						</item>
+						<operator name="or" />
+						<item>
+							<attribute>DXAGENT_SERVER_TRANSFER_IS_LAST_CHANCE</attribute>
+							<comparator name="equal" />
+							<value>1</value>
+						</item>
+					</expression>
+				</expression>
+			</expression>
+			<operator name="or" />
+			<expression>
+				<expression>
+					<item>
+						<attribute>EventType</attribute>
+						<comparator name="equal" />
+						<value>Incoming error</value>
+					</item>
+					<operator name="or" />
+					<item>
+						<attribute>EventType</attribute>
+						<comparator name="equal" />
+						<value>Outgoing error</value>
+					</item>
+				</expression>
+				<operator name="and" />
+				<item>
+					<attribute>DXAGENT_CLIENT</attribute>
+					<comparator name="not-equal" />
+					<value>server</value>
+				</item>
+			</expression>
+		</expression>
+		</condition>
+		<action Order="yes">
+			<inprocess-agent id="1" executeafter="" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+			<inprocess-agent id="2" executeafter="" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.SNMPNotifyAgent" />
+		</action>
+	</rule>
+</brpackage>

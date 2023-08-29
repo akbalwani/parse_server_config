@@ -1,0 +1,26 @@
+Name,filePath,fileFormat
+defaults.conf,./conf/defaults.conf,./conf/defaults.conf
+mimetypes,./conf/mime.types,./conf/mime.types
+admin.htaccess,./share/.htaccess,./share/.htaccess
+cache.management,./conf/tangosol-coherence-override.xml,./conf/tangosol-coherence-override.xml
+monitor.properties,./conf/monitor.properties,./conf/monitor.properties
+users.limits.messages,./lib/msgs/,./lib/msgs/
+AxwaySentinel.returncode.translationFile,./conf/sentinel-returncode-translation.xml,./conf/sentinel-returncode-translation.xml
+configuration.xml,./conf/configuration.xml,./conf/configuration.xml
+admin.server.xml,./tomcat/admin/conf/server.xml,./tomcat/admin/conf/server.xml
+locale.conf,./conf/locale.conf,./conf/locale.conf
+ssl.csr.conf,./conf/ssl.csr.conf,./conf/ssl.csr.conf
+conf.ehcache-tm.xml,./conf/ehcache-tm.xml,./conf/ehcache-tm.xml
+File Services Interface,./conf/FileServicesInterfaceRegistry.xml,./conf/FileServicesInterfaceRegistry.xml
+password.vault,All Password Vault Files,All Password Vault Files
+as2d.server.xml,./tomcat/as2/conf/server.xml,./tomcat/as2/conf/server.xml
+confV3TrapForwardingTable,./conf/V3TrapForwardingTable.xml,./conf/V3TrapForwardingTable.xml
+log.properties,./conf/log.properties,./conf/log.properties
+conf.ehcache-admin.xml,./conf/ehcache-admin.xml,./conf/ehcache-admin.xml
+admin.properties,./conf/admin.properties,./conf/admin.properties
+autoenrollment.properties,./conf/autoenrollment.properties,./conf/autoenrollment.properties
+admin.web.xml,./tomcat/admin/conf/web.xml,./tomcat/admin/conf/web.xml
+UnsafePaths,./conf/unsafe.paths.conf,./conf/unsafe.paths.conf
+brules,./brules/conf/brules.xml,./brules/conf/brules.xml
+conf.ehcache-tools.xml,./conf/ehcache-tools.xml,./conf/ehcache-tools.xml
+support-tool.properties,./conf/support-tool.properties,./conf/support-tool.properties

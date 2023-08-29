@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="ICAPScan.xml" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd">
+    <rule name="ICAPScan" type="static" precedence="40">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>ICAPScan</value>
+                </item>
+            </expression>
+        </condition>
+         <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.icap.agents.ICAPScanAgent"/>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+	
+	<rule name="Environment" type="static" precedence="15">
+    <condition>
+        <expression>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>ICAPScan</value>
+            </item>                
+		</expression>
+    </condition>
+    <action Order="yes">
+        <inprocess-agent id="1" executeafter="" streamaccess="none" class="com.axway.st.server.icap.agents.EnvironmentAgent" />
+        <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+    </action>
+	</rule>
+	
+	<rule name="OutgoingFileScan" type="static" precedence="29">
+    <condition>
+        <expression>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Outgoing start</value>
+            </item>                
+		</expression>
+    </condition>
+    <action Order="yes">
+		<inprocess-agent id="1" executeafter="" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+		<inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.axway.st.server.icap.agents.OutgoingFileScanAgent" />
+    </action>
+	</rule>
+	
+	<rule name="OutgoingPackageScan" type="static" precedence="34">
+        <condition>
+            <expression>
+              <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>PMitemGet</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>PMitemAnonymousGet</value>
+                </item>
+               
+            </expression>
+        </condition>
+        <action Order="yes">	        
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.humansystemapp.agents.OutgoingPackageScanAgent"/>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+
+</brpackage>
+

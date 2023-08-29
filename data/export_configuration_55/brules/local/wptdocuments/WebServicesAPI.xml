@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd" name="WebServicesAPI.xml">
+   <rule name="APIContextInitialization" type="static" precedence="12">
+        <condition>
+            <item>
+                 <attribute>DXAGENT_IS_API_CALL</attribute>
+                 <comparator name="equal" />
+                 <value>1</value>
+            </item>
+            <operator name="and" />
+            <expression>
+                <item>
+                     <attribute>EventType</attribute>
+                     <comparator name="equal" />
+                     <value>Server Transfer - Pull</value>
+                </item>
+                <operator name="or" />
+                <item>
+                     <attribute>EventType</attribute>
+                     <comparator name="equal" />
+                     <value>Server Transfer - Push</value>
+                </item>
+                <operator name="or" />
+                <item>
+                     <attribute>EventType</attribute>
+                     <comparator name="equal" />
+                     <value>Server Transfer - Connection</value>
+                </item>                
+                <operator name="or" />
+                <item>
+                     <attribute>EventType</attribute>
+                     <comparator name="equal" />
+                     <value>Server Transfer - Testlist</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.TransfersApiInitializationAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.TransfersApiEvaluationAgent" />
+            <inprocess-agent id="3" executeafter="2" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence">
+                <params>
+                    <param>
+                        <param-name>reevaluateRules</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="TransferApiDetails" type="static" precedence="27">
+        <condition>
+            <expression>
+              <expression>
+                  <item>
+                      <attribute>EventType</attribute>
+                      <comparator name="equal" />
+                      <value>Incoming start</value>
+                  </item>
+                  <operator name="or" />
+                  <item>
+                      <attribute>EventType</attribute>
+                      <comparator name="equal" />
+                      <value>Outgoing start</value>
+                  </item>
+              </expression>
+              <operator name="and" />
+                  <not>
+                      <item>
+                          <attribute>DXAGENT_PROTOCOL</attribute>
+                          <comparator name="equal" />
+                          <value>ftp-comb</value>
+                      </item>
+                      <operator name="and" />
+                      <item>
+                          <attribute>DXAGENT_TARGET</attribute>
+                          <comparator name="match" />
+                          <value>.*\.tmp</value>
+                      </item>
+                  </not>
+              <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_IS_API_CALL</attribute>
+                    <comparator name="equal" />
+                    <value>1</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.Continue">
+                <params>
+                    <param>
+                        <param-name>continue</param-name>
+                        <param-value>"0"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="3" executeafter="2" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.TransfersApiLoggingAgent" >
+                 <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                 </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+</brpackage>

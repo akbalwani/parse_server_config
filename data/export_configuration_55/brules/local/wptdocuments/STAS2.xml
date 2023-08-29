@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- @(#) $Id: STAS2.xml,v 1.22.8.1 2009-11-03 11:27:33 apetrova Exp $ -->
+<!-- Do not delete the SecureTransport VERSION line below. -->
+<!-- ~VERSION~ 1 -->
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="STAS2.xml" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd">
+    
+    <rule name="Post" type="static" precedence="100">
+        
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>HTTP Cmd - POST</value>
+            </item>
+        </condition>
+        
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" wait="yes" class="com.tumbleweed.st.server.as2.agent.AS2Agent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+
+    <rule name="MDNPost" type="static" precedence="99">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>HTTP Cmd - POST</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_EXTRAARGS</attribute>
+                    <comparator name="contain" />
+                    <value>/mdn</value>
+                </item>
+            </expression>
+        </condition>
+    
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" wait="yes" class="com.tumbleweed.st.server.as2.agent.AS2MDNAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+
+    <rule name="AS2Transfer" type="static" precedence="100">
+        <condition>
+            <expression>
+                <expression>
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Server Transfer - Push</value>
+                    </item>
+                </expression>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                    <comparator name="equal" />
+                    <value>as2</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" class="com.tumbleweed.st.server.as2.agent.AS2TransferAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.RetryAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                    <param>
+                        <param-name>dontretry</param-name><param-value>"0 1 2 4 5"</param-value>
+                    </param>
+                    <param>
+                        <param-name>internalretry</param-name><param-value>"6"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+
+    <rule name="AS2MDNTransfer" type="static" precedence="100">
+        <condition>
+            <expression>
+                <expression>
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Server Transfer - Push</value>
+                    </item>
+                </expression>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                    <comparator name="equal" />
+                    <value>as2mdn</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" class="com.tumbleweed.st.server.as2.agent.AS2MDNTransferAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.RetryAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                    <param>
+                        <param-name>dontretry</param-name><param-value>"0 1 2 4 5"</param-value>
+                    </param>
+                    <param>
+                        <param-name>internalretry</param-name><param-value>"6"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="AS2SessionCleanup" type="static" precedence="98">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>HTTP Cmd - POST</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_CLIENT</attribute>
+                    <comparator name="equal" />
+                    <value>as2d</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.CleanupAgent" />
+        </action>
+    </rule>
+    
+    <rule name="AccountReslvAS2" type="static" precedence="40">
+        <condition>
+        	<expression>
+        		<item>
+	                <attribute>DXAGENT_CLIENT</attribute>
+	                <comparator name="equal"/>
+	                <value>as2</value>
+	            </item>
+	        </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" wait="yes" class="com.tumbleweed.st.server.tm.agents.AccountResolveAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+        
+</brpackage>
+

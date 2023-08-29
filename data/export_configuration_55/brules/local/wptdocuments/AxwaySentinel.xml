@@ -1,0 +1,957 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd" name="AxwaySentinel.xml">
+    <rule name="Receiving" type="static" precedence="28">
+        <condition>
+        <expression>
+            <expression>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Incoming start</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                <comparator name="not-equal" />
+                <value>SynchronyTransfer</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_PROTOCOL</attribute>
+                <comparator name="not-equal" />
+                <value>routing</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_FILE_STATUS</attribute>
+                <comparator name="not-equal" />
+                <value>8</value>
+            </item>
+            </expression>
+            <operator name="or" />
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Pesit resume</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_TRANSFER_TYPE</attribute>
+                    <comparator name="equal" />
+                    <value>incoming</value>
+                </item>
+            </expression>
+        </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.ReceivingNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Received" type="static" precedence="40">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Incoming end</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                <comparator name="not-equal" />
+                <value>SynchronyTransfer</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_PROTOCOL</attribute>
+                <comparator name="not-equal"/>
+                <value>pesit</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_PROTOCOL</attribute>
+                <comparator name="not-equal" />
+                <value>routing</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_FILE_STATUS</attribute>
+                <comparator name="not-equal" />
+                <value>8</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.ReceivedNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Waiting" type="static" precedence="40">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Incoming end</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                <comparator name="not-equal" />
+                <value>SynchronyTransfer</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_PROTOCOL</attribute>
+                <comparator name="not-equal"/>
+                <value>pesit</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_PROTOCOL</attribute>
+                <comparator name="not-equal" />
+                <value>routing</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_FILE_STATUS</attribute>
+                <comparator name="equal" />
+                <value>8</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.WaitingNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+    <rule name="Sending" type="static" precedence="40">
+        <condition>
+        <expression>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Outgoing start</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_PROTOCOL</attribute>
+                <comparator name="not-equal" />
+                <value>routing</value>
+            </item>
+            <operator name="or" />
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Pesit resume</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_TRANSFER_TYPE</attribute>
+                    <comparator name="equal" />
+                    <value>outgoing</value>
+                </item>
+            </expression>
+        </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.SendingNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Sent" type="static" precedence="40">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Outgoing end</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_PROTOCOL</attribute>
+                <comparator name="not-equal"/>
+                <value>pesit</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_PROTOCOL</attribute>
+                <comparator name="not-equal" />
+                <value>routing</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.SentNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="PeSITTransferEnd" type="static" precedence="40">
+        <condition>
+        <expression>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Outgoing end</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Incoming end</value>
+                </item>
+            </expression>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_PROTOCOL</attribute>
+                <comparator name="equal"/>
+                <value>pesit</value>
+            </item>
+        </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.PesitTransferEndedNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Interrupted" type="static" precedence="40">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Pesit pause</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.InterruptedNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="UpdateCycleId" type="static" precedence="40">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Sentinel update</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.UpdateCycleIdNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Canceled" type="static" precedence="40">
+        <condition>
+            <expression>
+                <expression>
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Incoming abort</value>
+                    </item>
+                    <operator name="or" />
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Outgoing abort</value>
+                    </item>
+                </expression>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_PROTOCOL</attribute>
+                    <comparator name="not-equal" />
+                    <value>routing</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.CanceledNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Failed" type="static" precedence="40">
+        <condition>
+            <expression>
+                <expression>
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Incoming error</value>
+                    </item>
+                    <operator name="or" />
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Outgoing error</value>
+                    </item>
+                    <operator name="or" />
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Server Transfer - Pull</value>
+                    </item>
+                </expression>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_PROTOCOL</attribute>
+                    <comparator name="not-equal" />
+                    <value>routing</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.FailedNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Renamed" type="static" precedence="40">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>FTP Cmd - RNTO</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.RenamedNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Deleted" type="static" precedence="40">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>FTP Cmd - DELE</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.DeletedNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Transformation" type="static" precedence="40">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Transformation</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.TransformationStartingNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="3" executeafter="2" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.TransformationNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Forwarding" type="static" precedence="98">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Application - Incoming</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                    <comparator name="equal" />
+                    <value>StandardRouter</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.routerapp.sentinel.ForwardingNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+    <rule name="ForwardingError" type="static" precedence="97">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Application - Incoming</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                    <comparator name="equal" />
+                    <value>StandardRouter</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" wait="yes" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" wait="yes" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.routerapp.sentinel.ForwardingErrorNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Forwarded" type="static" precedence="97">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Application - filerelocated</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                    <comparator name="equal" />
+                    <value>StandardRouter</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.routerapp.sentinel.ForwardedNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+    <rule name="Available" type="static" precedence="40">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Application - postprocess</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                <comparator name="not-equal" />
+                <value>SynchronyTransfer</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.AvailableNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+    <rule name="TMControlPlug" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>DXAGENT_TYPE</attribute>
+                <comparator name="equal" />
+                <value>ControlPlug</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.TMControlPlugAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="AxwaySentinelLinkData Maintenance Application" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Application - Schedule</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                    <comparator name="equal" />
+                    <value>SentinelLinkDataMaint</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.sentinellinkdatamaintapp.agents.SentinelLinkDataMaintAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="ServerInitiatedTransfer" type="static" precedence="28">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Server Transfer - Pull</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Server Transfer - Push</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.AdvancedExpressionEvaluatorAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.ServerInitiatedTransferNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="3" executeafter="2" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+    <rule name="ActivityDuration" type="static" precedence="23">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FTP Cmd - DELE</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FTP Cmd - RNTO</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Transformation</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.TimeStamp" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+    <rule name="AxwayTransferCFTReceiving" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Synchrony Transfer</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.FailedCftAccountNotFoundNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="SentinelAck" type="static" precedence="110">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Pesit ack</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.AckedNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+    <rule name="ApplicationError" type="static" precedence="40">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Application - Incoming</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                <comparator name="not-equal" />
+                <value>SynchronyTransfer</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                <comparator name="not-equal" />
+                <value>StandardRouter</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.ApplicationErrorNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="AdvancedRoutingExecuting" type="static" precedence="28">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>AdvancedRouting execute</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.TriggerFileInputSentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.axway.st.server.route.core.sentinel.AdvancedRoutingExecutingNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+    <rule name="AdvancedRoutingExecuted" type="static" precedence="32">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>AdvancedRouting execute</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.TriggerFileInputSentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.axway.st.server.route.core.sentinel.AdvancedRoutingExecutedNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="PublishedToAccount" type="static" precedence="40">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Incoming end</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_PROTOCOL</attribute>
+                <comparator name="equal" />
+                <value>routing</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.axway.st.server.route.core.sentinel.PublishedToAccountNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="PublishedToAccountFailed" type="static" precedence="40">
+        <condition>
+            <expression>
+                <expression>
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Incoming error</value>
+                    </item>
+                    <operator name="or" />
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Outgoing error</value>
+                    </item>
+                </expression>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_PROTOCOL</attribute>
+                    <comparator name="equal" />
+                    <value>routing</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"false"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.axway.st.server.route.core.sentinel.PublishedToAccountFailedNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="SendToPartnerArchiving" type="static" precedence="40">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Sentinel archived</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.SentinelNotifierAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                    <param>
+                        <param-name>Command</param-name>
+                        <param-value>"com.tumbleweed.st.server.sentinel.ArchivedNotificationCommand"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+</brpackage>

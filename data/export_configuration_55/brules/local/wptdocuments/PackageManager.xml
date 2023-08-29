@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Do not delete the SecureTransport VERSION line below. -->
+<!-- ~VERSION~ 1 -->
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PackageManager.xml" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd">
+    <rule name="Anonymous" type="static" precedence="18">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>DXAGENT_ANONYMOUS_ACCESS</attribute>
+                    <comparator name="equal" />
+                    <value>1</value>
+                </item>
+                <operator name="and" />
+	            <expression>
+	                <item>
+	                    <attribute>EventType</attribute>
+	                    <comparator name="equal" />
+	                    <value>Outgoing start</value>
+	                </item>
+	                <operator name="or" />
+	                <item>
+	                    <attribute>EventType</attribute>
+	                    <comparator name="equal" />
+	                    <value>Outgoing end</value>
+	                </item>
+	                <operator name="or" />
+	                <item>
+	                    <attribute>EventType</attribute>
+	                    <comparator name="equal" />
+	                    <value>Outgoing error</value>
+	                </item>
+	                <operator name="or" />
+	                <item>
+	                    <attribute>EventType</attribute>
+	                    <comparator name="equal" />
+	                    <value>Outgoing abort</value>
+	                </item>
+	            </expression>                
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.ConfigureAnonymousUserAgent"/>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+    
+    <rule name="LinkAccessAuthorization" type="static" precedence="90">
+        <condition>
+           <item>
+               <attribute>EventType</attribute>
+               <comparator name="equal" />
+               <value>PMitemAnonymousAuthorize</value>
+           </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.LinkAccessAuthorizationAgent" />
+        </action>
+    </rule> 
+            
+    <rule name="CreatePackage" type="static" precedence="90">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>PMcreate</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.PackageCreateAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    
+	<rule name="UpdatePackage" type="static" precedence="90">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>PMupdate</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.PackageUpdateAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    
+	<rule name="DeletePackage" type="static" precedence="90">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>PMdelete</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.PackageDeleteAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    
+	<rule name="CommitPackage" type="static" precedence="90">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>PMcommit</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.PackageValidationsAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.appframework.ApplicationController">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                    <param>
+                        <param-name>PreCommit</param-name>
+                        <param-value>"true"</param-value>
+                    </param>                    
+                </params>            
+            </inprocess-agent>
+            <inprocess-agent id="3" executeafter="2" streamaccess="none" wait="yes" class="com.axway.st.server.addressbook.agents.AddressBookAdhocConfigAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="4" executeafter="3" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.PackageCommitAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="5" executeafter="4" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.appframework.ApplicationController">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>                        
+            </inprocess-agent>
+            <inprocess-agent id="6" executeafter="5" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.PackageCommitCleanupAgent" />
+        </action>
+    </rule>
+    	
+	<rule name="ListPackages" type="static" precedence="90">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>PMlist</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.PackageListAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    
+	<rule name="CreateItem" type="static" precedence="90">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>PMitemCreate</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.PackageItemCreateAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    
+	<rule name="UpdateItem" type="static" precedence="90">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>PMitemUpdate</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.PackageItemUpdateAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    
+	<rule name="DeleteItem" type="static" precedence="90">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>PMitemDelete</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.PackageItemDeleteAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    
+	<rule name="ListItems" type="static" precedence="90">
+        <condition>
+            <expression>
+				<item>
+				    <attribute>EventType</attribute>
+				    <comparator name="equal" />
+				    <value>PMitemList</value>
+				</item>
+                <operator name="or" />
+	            <item>
+	                <attribute>EventType</attribute>
+	                <comparator name="equal" />
+	                <value>PMitemAnonymousList</value>
+	            </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.PackageItemListAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    
+	<rule name="ItemGetContent" type="static" precedence="90">
+        <condition>
+            <expression>
+	           <item>
+	               <attribute>EventType</attribute>
+	               <comparator name="equal" />
+	               <value>PMitemGet</value>
+	           </item>
+               <operator name="or" />
+	           <item>
+	               <attribute>EventType</attribute>
+	               <comparator name="equal" />
+	               <value>PMitemAnonymousGet</value>
+	           </item>
+            </expression>        
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.PackageItemGetContentAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule> 
+    
+	<rule name="ItemSetContent" type="static" precedence="90">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>PMitemPut</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.PackageItemChangeContentAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    
+    <rule name="ItemDeleteContent" type="static" precedence="90">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>PMitemDeleteContent</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.PackageItemDeleteContentAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+
+    <rule name="FolderSummary" type="static" precedence="90">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>PMfolderSummary</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.FolderSummaryAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+
+    <rule name="PackageMove" type="static" precedence="90">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>PMmove</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.tm.packagemanager.agent.PackageMoveAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+</brpackage>

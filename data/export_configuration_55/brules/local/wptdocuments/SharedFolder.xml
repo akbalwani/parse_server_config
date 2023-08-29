@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- @(#) $Id: SharedFolder.xml,v 1.6 2006-08-05 00:46:22 flam Exp $ --><!-- Do not delete the SecureTransport VERSION line below. --><!-- ~VERSION~ 1 --><brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="SharedFolder.xml" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd">
+    
+    <rule name="SharedFolderApplication" precedence="100" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Application - Incoming</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>SharedFolder</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.InProcNoOp" executeafter="" id="1" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="SharedFolderSubscription" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal"/>
+                    <value>Application - Init</value>
+                </item>
+                <operator name="and"/>
+                <item>
+                    <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                    <comparator name="equal"/>
+                    <value>SharedFolder</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.sharedfolderapp.agents.SharedFolderSubscriptionAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+</brpackage>

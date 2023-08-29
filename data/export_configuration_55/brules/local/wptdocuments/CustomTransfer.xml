@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- @(#) $Id: HttpTransfer.xml,v 1.8 2006-07-28 00:07:02 ygoulishev Exp $ -->
+<!-- Do not delete the SecureTransport VERSION line below. -->
+<!-- ~VERSION~ 1 -->
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="CustomTransfer.xml" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd">
+    <rule name="CustomTransfer" type="static" precedence="100">
+        <condition>
+            <expression>
+                <expression>
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Server Transfer - Pull</value>
+                    </item>
+                    <operator name="or" />
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Server Transfer - Push</value>
+                    </item>
+                </expression>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                    <comparator name="not-equal" />
+                    <value>ftp</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                    <comparator name="not-equal" />
+                    <value>adhoc</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                    <comparator name="not-equal" />
+                    <value>http</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                    <comparator name="not-equal" />
+                    <value>ssh</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                    <comparator name="not-equal" />
+                    <value>pesit</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                    <comparator name="not-equal" />
+                    <value>folder</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                    <comparator name="not-equal" />
+                    <value>cd</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                    <comparator name="not-equal" />
+                    <value>synchrony transfer</value>
+                </item>
+                <operator name="and" />
+                <not>
+                    <item>
+                        <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                        <comparator name="match" />
+                        <value>mbft.*</value>
+                    </item>
+                </not>
+                <operator name="and" />
+                <not>
+                    <item>
+                        <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                        <comparator name="match" />
+                        <value>as2.*</value>
+                    </item>
+                </not>
+                <operator name="and" />
+                <not>
+                    <item>
+                        <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                        <comparator name="match" />
+                        <value>adhoc</value>
+                    </item>
+                </not>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" class="com.axway.st.server.plugins.site.agent.CustomTransferAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.RetryAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                    <param>
+                        <!-- the event exit code for which the retry agent should flag a retry to the event queue -->
+                        <param-name>dontretry</param-name><param-value>"0 1 2 4 5"</param-value>
+                    </param>
+                    <param>
+                        <param-name>internalretry</param-name><param-value>"6"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="3" executeafter="2" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.Continue">
+                <params>
+                    <param>
+                        <param-name>continue</param-name>
+                        <param-value>"0 1 2 4 5"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+
+</brpackage>
+

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd" name="Resubmit.xml">
+    
+     <rule name="CancelTransfer" type="static" precedence="100">
+        <condition>
+            <expression>
+               <item>
+                   <attribute>EventType</attribute>
+                   <comparator name="equal" />
+                   <value>Resubmit cancel</value>
+               </item>
+        	</expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.resubmit.agents.ResubmitCancelAgent" />
+        </action>
+    </rule>
+    
+    <rule name="ResubmitTransfer" type="static" precedence="100">
+        <condition>
+            <expression>
+               <item>
+                   <attribute>EventType</attribute>
+                   <comparator name="equal" />
+                   <value>Resubmit start</value>
+               </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.resubmit.agents.ResubmitAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+
+    <!-- Perform resubmit cleanup. List all event types that result into resubmit here. This goes right after persist 
+        agent to ensure it's executed after event was processed. -->
+    <rule name="ResubmitCleanup" type="static" precedence="13">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Incoming end</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Application - Incoming</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Server Transfer - Push</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.axway.st.server.resubmit.agents.ResubmitCleanupAgent" />
+        </action>
+    </rule>
+</brpackage>
+

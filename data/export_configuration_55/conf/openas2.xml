@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+      @(#) $Id: openas2.xml,v 1.4 2006-03-13 08:52:41 pzhivkov Exp $
+      Open AS/2 configuration file
+  -->
+
+<!-- Do not delete the SecureTransport VERSION line below. -->
+<!-- ~VERSION~ 1 -->
+
+<openas2>
+	<processor classname="org.openas2.processor.DefaultProcessor">
+		<module classname="com.tumbleweed.st.server.as2.module.storage.STMessageFileModule"/>
+	</processor>
+</openas2>
+

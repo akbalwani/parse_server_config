@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd" name="AddressBook.xml">  
+   <rule name="AddressBook" type="static" precedence = "50">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>AddressBook - createcontact</value>
+                </item>
+                <operator name="or" />
+                <item>
+                     <attribute>EventType</attribute>
+                     <comparator name="equal" />
+                     <value>AddressBook - updatecontact</value>
+                </item>
+                <operator name="or" />
+                <item>
+                     <attribute>EventType</attribute>
+                     <comparator name="equal" />
+                     <value>AddressBook - deletecontact</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>AddressBook - retrievecontact</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.AddressBookAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+</brpackage>

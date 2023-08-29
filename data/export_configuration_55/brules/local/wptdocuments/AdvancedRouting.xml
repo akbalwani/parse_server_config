@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?><brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="AdvancedRouting.xml" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd">
+    
+    <rule name="ICAPScan" precedence="27" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>AdvancedRouting execute</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.ICAPSendEventAgent" executeafter="" id="1" streamaccess="none"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="AdvancedRoutingApplication" precedence="100" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming end</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming error</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Incoming abort</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing end</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing error</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>Outgoing abort</value>
+                    
+                </item>
+                
+                <operator name="or"/>
+                
+                <item>
+                    
+                    <attribute>EventType</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>AdvancedRoutingApp execute</value>
+                    
+                </item>
+                
+                <operator name="and"/>
+                
+                <item>
+                    
+                    <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                    
+                    <comparator name="equal"/>
+                    
+                    <value>AdvancedRouting</value>
+                    
+                </item>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.axway.st.server.route.core.agents.AdvancedRoutingAppAgent" executeafter="" id="1" streamaccess="none"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none" wait="yes"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="AdvancedRoutingExecute" precedence="30" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>AdvancedRouting execute</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.axway.st.server.route.core.agents.AdvancedRoutingExecuteAgent" executeafter="" id="1" streamaccess="all" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="1" id="2" streamaccess="none"/>
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.CleanupAgent" executeafter="2" id="3" streamaccess="none"/>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="AdvancedRoutingPostProcessing" precedence="31" type="static">
+        
+        <condition>
+            
+            <item>
+                
+                <attribute>EventType</attribute>
+                
+                <comparator name="equal"/>
+                
+                <value>AdvancedRouting execute</value>
+                
+            </item>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none"/>
+            
+            <inprocess-agent class="com.axway.st.server.route.core.agents.PostProcessingAgent" executeafter="1" id="2" streamaccess="all" wait="yes">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+        </action>
+        
+    </rule>
+    
+    <rule name="AdvancedRoutingDeleteOnSuccessfulClientDownload" precedence="32" type="static">
+        
+        <condition>
+            
+            <expression>
+                
+                <expression>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Outgoing end</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Outgoing abort</value>
+                        
+                    </item>
+                    
+                    <operator name="or"/>
+                    
+                    <item>
+                        
+                        <attribute>EventType</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>Outgoing error</value>
+                        
+                    </item>
+                    
+                </expression>
+                
+                <operator name="and"/>
+                
+                <expression>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                        
+                        <comparator name="equal"/>
+                        
+                        <value>AdvancedRouting</value>
+                        
+                    </item>
+                    
+                    <operator name="and"/>
+                    
+                    <item>
+                        
+                        <attribute>DXAGENT_CLIENT</attribute>
+                        
+                        <comparator name="not-equal"/>
+                        
+                        <value>server</value>
+                        
+                    </item>
+                    
+                </expression>
+                
+            </expression>
+            
+        </condition>
+        
+        <action Order="yes">
+            
+            <inprocess-agent class="com.tumbleweed.st.server.tm.agents.NextPrecedence" executeafter="" id="1" streamaccess="none"/>
+            
+            <inprocess-agent class="com.axway.st.server.route.core.agents.DeleteOnDownloadAgent" executeafter="1" id="2" streamaccess="none">
+                
+                <params>
+                    
+                    <param>
+                        
+                        <param-name>Impersonation</param-name>
+                        
+                        <param-value>"true"</param-value>
+                        
+                    </param>
+                    
+                </params>
+                
+            </inprocess-agent>
+            
+        </action>
+        
+    </rule>
+    
+</brpackage>

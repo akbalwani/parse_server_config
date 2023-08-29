@@ -1,0 +1,1124 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --><!--                                                                       --><!--              Coherence Hibernate CacheProvider:                       --><!--                  Cache Configuration Descriptor                       --><!--                                                                       --><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --><cache-config>
+    
+    <caching-scheme-mapping>
+        
+        <cache-mapping>
+            <!--
+      Query cache configuration.
+      -->
+            
+            <cache-name>org.hibernate.cache.*</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>100</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>AccountCache</cache-name>
+            
+            <scheme-name>accounts-distributed-admin</scheme-name>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>SiteCache</cache-name>
+            
+            <scheme-name>accounts-properties-distributed</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>10</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>IdfCache</cache-name>
+            
+            <scheme-name>accounts-properties-distributed</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>10</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>AccountLocalKeyCache</cache-name>
+            
+            <scheme-name>accounts-properties-distributed</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>1</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>AccountLocalPGPKeyCache</cache-name>
+            
+            <scheme-name>accounts-properties-distributed</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>1</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>CustomAttributesCache</cache-name>
+            
+            <scheme-name>accounts-properties-distributed</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>400</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        <!-- size-limit should be 2 times the count of desired cached data transformations -->
+        
+        <cache-mapping>
+            
+            <cache-name>DataTransformationCache</cache-name>
+            
+            <scheme-name>accounts-properties-distributed</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>80</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        <!-- size-limit should be 3 times the count of desired cached subscriptions -->
+        
+        <cache-mapping>
+            
+            <cache-name>SubscriptionCache</cache-name>
+            
+            <scheme-name>accounts-properties-distributed</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>60</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        <!-- size-limit should be 2 times the count of desired cached configurations -->
+        
+        <cache-mapping>
+            
+            <cache-name>TransferConfigurationCache</cache-name>
+            
+            <scheme-name>accounts-properties-distributed</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>80</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>LocalKeyCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>1</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>LoginCertificateCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>1</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>CertificateReferenceCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>2</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>TrustedCACertificateCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>1</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>PartnerCertificateCache</cache-name>
+            
+            <scheme-name>accounts-properties-distributed</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>1</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>LocalPGPKeyCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>1</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>PartnerPGPKeyCache</cache-name>
+            
+            <scheme-name>accounts-properties-distributed</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>1</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        <!-- size-limit should be 3 times the count of desired cached applications -->
+        
+        <cache-mapping>
+            
+            <cache-name>ApplicationCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>15</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>ConfigurationCache</cache-name>
+            
+            <scheme-name>configuration-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>3500</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>BusinessUnitCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>15</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>ConfigurationProfileCache</cache-name>
+            
+            <scheme-name>configuration-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>1</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>UserClassCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>100</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>RouteCache</cache-name>
+            
+            <scheme-name>accounts-properties-distributed</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>100</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>LoginRestrictionCache</cache-name>
+            
+            <scheme-name>accounts-properties-distributed</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>100</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>LdapCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>100</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            <!--
+      Entity cache configuration.
+      -->
+            
+            <cache-name>*</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>100</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>org.hibernate.cache.spi.UpdateTimestampsCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>expiry</param-name>
+                    
+                    <param-value>0</param-value>
+                    
+                </init-param>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>0</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>AddressBookSourceCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>50</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>AddressBookUserCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>5000</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>RecentlyDownloadedFilesCache</cache-name>
+            
+            <scheme-name>recentlydownloaded-distributed-admin</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>100</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+    </caching-scheme-mapping>
+    
+    <caching-schemes>
+        <!--
+    The DefaultInvocationService is used by the com.tumbleweed.st.server.api.cluster.InvocationManager 
+     -->
+        
+        <invocation-scheme>
+            
+            <scheme-name>invocation-service</scheme-name>
+            
+            <service-name>DefaultInvocationService</service-name>
+            
+            <thread-count>0</thread-count>
+            
+            <autostart>true</autostart>
+            
+        </invocation-scheme>
+        
+        <distributed-scheme>
+            
+            <scheme-name>configuration-distributed</scheme-name>
+            
+            <service-name>ConfigurationDistributedCache</service-name>
+            
+            <serializer>
+                
+                <class-name>com.tangosol.io.DefaultSerializer</class-name>
+                
+            </serializer>
+            
+            <backing-map-scheme>
+                
+                <local-scheme>
+                    
+                    <scheme-ref>configuration-local</scheme-ref>
+                    
+                </local-scheme>
+                
+            </backing-map-scheme>
+            
+            <autostart>true</autostart>
+            
+        </distributed-scheme>
+        
+        <near-scheme>
+            
+            <scheme-name>configuration-near</scheme-name>
+            
+            <front-scheme>
+                
+                <local-scheme>
+                    
+                    <scheme-ref>configuration-local</scheme-ref>
+                    
+                </local-scheme>
+                
+            </front-scheme>
+            
+            <back-scheme>
+                
+                <distributed-scheme>
+                    
+                    <scheme-ref>configuration-distributed</scheme-ref>
+                    
+                </distributed-scheme>
+                
+            </back-scheme>
+            
+            <autostart>true</autostart>
+            
+            <listener>
+                
+                <class-scheme>
+                    
+                    <class-name>com.tumbleweed.st.server.configuration.CoherenceConfigurationCacheEventListener</class-name>
+                    
+                </class-scheme>
+                
+            </listener>
+            
+        </near-scheme>
+        <!-- high-units should be 6 times the count of desired cached accounts -->
+        
+        <near-scheme>
+            
+            <scheme-name>accounts-distributed-tm</scheme-name>
+            
+            <front-scheme>
+                
+                <local-scheme>
+                    
+                    <scheme-ref>accounts-local-tm</scheme-ref>
+                    
+                </local-scheme>
+                
+            </front-scheme>
+            
+            <back-scheme>
+                
+                <distributed-scheme>
+                    
+                    <scheme-ref>accounts-back-tm</scheme-ref>
+                    
+                </distributed-scheme>
+                
+            </back-scheme>
+            
+            <invalidation-strategy>all</invalidation-strategy>
+            
+        </near-scheme>
+        
+        <local-scheme>
+            
+            <scheme-name>accounts-local-tm</scheme-name>
+            
+            <eviction-policy>HYBRID</eviction-policy>
+            
+            <high-units>{size-limit 600}</high-units>
+            
+            <expiry-delay>{expiry 1h}</expiry-delay>
+            
+        </local-scheme>
+        
+        <distributed-scheme>
+            
+            <scheme-name>accounts-back-tm</scheme-name>
+            
+            <service-name>AccountsDistributedCache</service-name>
+            
+            <thread-count>2</thread-count>
+            
+            <backing-map-scheme>
+                
+                <local-scheme>
+                    
+                    <eviction-policy>HYBRID</eviction-policy>
+                    
+                    <high-units>600</high-units>
+                    
+                    <expiry-delay>1h</expiry-delay>
+                    
+                </local-scheme>
+                
+            </backing-map-scheme>
+            
+            <autostart>true</autostart>
+            
+        </distributed-scheme>
+        
+        <distributed-scheme>
+            
+            <scheme-name>accounts-distributed-admin</scheme-name>
+            
+            <service-name>AccountsDistributedCache</service-name>
+            
+            <thread-count>2</thread-count>
+            
+            <backing-map-scheme>
+                
+                <local-scheme>
+                    
+                    <eviction-policy>HYBRID</eviction-policy>
+                    
+                    <high-units>6</high-units>
+                    
+                    <expiry-delay>5m</expiry-delay>
+                    
+                </local-scheme>
+                
+            </backing-map-scheme>
+            
+            <autostart>true</autostart>
+            
+        </distributed-scheme>
+        
+        <local-scheme>
+            
+            <scheme-name>accounts-properties-local</scheme-name>
+            
+            <eviction-policy>HYBRID</eviction-policy>
+            
+            <high-units>{size-limit 1234}</high-units>
+            
+            <expiry-delay>{expiry 1h}</expiry-delay>
+            
+        </local-scheme>
+        
+        <local-scheme>
+            
+            <scheme-name>accounts-properties-near-local</scheme-name>
+            
+            <eviction-policy>HYBRID</eviction-policy>
+            
+            <high-units>{size-limit 5000}</high-units>
+            
+            <expiry-delay>{expiry 1h}</expiry-delay>
+            
+        </local-scheme>
+        
+        <local-scheme>
+            
+            <scheme-name>configuration-local</scheme-name>
+            
+            <eviction-policy>HYBRID</eviction-policy>
+            
+            <high-units>{size-limit 3500}</high-units>
+            
+        </local-scheme>
+        
+        <distributed-scheme>
+            
+            <scheme-name>accounts-properties-distributed</scheme-name>
+            
+            <service-name>AccountsPropertiesDistributedCache</service-name>
+            
+            <thread-count>5</thread-count>
+            
+            <backing-map-scheme>
+                
+                <local-scheme>
+                    
+                    <scheme-ref>accounts-properties-local</scheme-ref>
+                    
+                </local-scheme>
+                
+            </backing-map-scheme>
+            
+            <autostart>true</autostart>
+            
+        </distributed-scheme>
+        
+        <near-scheme>
+            
+            <scheme-name>accounts-properties-near-overflow</scheme-name>
+            
+            <front-scheme>
+                
+                <local-scheme>
+                    
+                    <scheme-ref>accounts-properties-near-local</scheme-ref>
+                    
+                </local-scheme>
+                
+            </front-scheme>
+            
+            <back-scheme>
+                
+                <distributed-scheme>
+                    
+                    <scheme-ref>accounts-properties-distributed-overflow</scheme-ref>
+                    
+                </distributed-scheme>
+                
+            </back-scheme>
+            
+            <invalidation-strategy>all</invalidation-strategy>
+            
+            <autostart>true</autostart>
+            
+        </near-scheme>
+        
+        <near-scheme>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <front-scheme>
+                
+                <local-scheme>
+                    
+                    <scheme-ref>hibernate-local</scheme-ref>
+                    
+                </local-scheme>
+                
+            </front-scheme>
+            
+            <back-scheme>
+                
+                <distributed-scheme>
+                    
+                    <scheme-ref>hibernate-distributed</scheme-ref>
+                    
+                </distributed-scheme>
+                
+            </back-scheme>
+            
+            <autostart>true</autostart>
+            
+        </near-scheme>
+        
+        <distributed-scheme>
+            
+            <scheme-name>hibernate-distributed</scheme-name>
+            
+            <service-name>HibernateDistributedCache</service-name>
+            
+            <serializer>
+                
+                <class-name>com.tangosol.io.DefaultSerializer</class-name>
+                
+            </serializer>
+            
+            <backing-map-scheme>
+                
+                <local-scheme>
+                    
+                    <scheme-ref>hibernate-local</scheme-ref>
+                    
+                </local-scheme>
+                
+            </backing-map-scheme>
+            
+            <autostart>true</autostart>
+            
+        </distributed-scheme>
+        
+        <local-scheme>
+            
+            <scheme-name>hibernate-local</scheme-name>
+            
+            <eviction-policy>LRU</eviction-policy>
+            
+            <high-units>{size-limit 0}</high-units>
+            
+            <expiry-delay>{expiry 3600s}</expiry-delay>
+            
+        </local-scheme>
+        
+        <distributed-scheme>
+            
+            <scheme-name>accounts-properties-distributed-overflow</scheme-name>
+            
+            <service-name>AccountsPropertiesDistributedCache</service-name>
+            
+            <thread-count>4</thread-count>
+            
+            <backing-map-scheme>
+                
+                <overflow-scheme>
+                    
+                    <scheme-ref>accounts-properties-overflow</scheme-ref>
+                    
+                </overflow-scheme>
+                
+            </backing-map-scheme>
+            
+            <autostart>true</autostart>
+            
+        </distributed-scheme>
+        
+        <overflow-scheme>
+            <scheme-name>accounts-properties-overflow</scheme-name>
+            <front-scheme>
+                <local-scheme>
+                    <scheme-ref>accounts-properties-local</scheme-ref>
+                </local-scheme>
+            </front-scheme>
+            <back-scheme>
+                <paged-external-scheme>
+                    <scheme-ref>accounts-properties-external</scheme-ref>
+                </paged-external-scheme>
+            </back-scheme>
+            <autostart>true</autostart>
+            <expiry-delay>{expiry 1h}</expiry-delay>
+        </overflow-scheme>
+        
+        <paged-external-scheme>
+            
+            <scheme-name>accounts-properties-external</scheme-name>
+            
+            <nio-file-manager>
+                
+                <directory>/home/arpit/2021_nov_st/SecureTransport/var/tmp/tm/coherence-offheap-cache-disk</directory>
+                
+                <initial-size>10MB</initial-size>
+                
+                <maximum-size>512MB</maximum-size>
+                
+            </nio-file-manager>
+            <!-- 20 hours rolling cache -->
+            
+            <page-limit>80</page-limit>
+            
+            <page-duration>15m</page-duration>
+            
+            <autostart>true</autostart>
+            
+        </paged-external-scheme>
+        
+        <near-scheme>
+            
+            <scheme-name>recentlydownloaded-near-overflow</scheme-name>
+            
+            <front-scheme>
+                
+                <local-scheme>
+                    
+                    <scheme-ref>accounts-properties-near-local</scheme-ref>
+                    
+                </local-scheme>
+                
+            </front-scheme>
+            
+            <back-scheme>
+                
+                <distributed-scheme>
+                    
+                    <scheme-ref>recentlydownloaded-distributed-overflow</scheme-ref>
+                    
+                </distributed-scheme>
+                
+            </back-scheme>
+            
+            <invalidation-strategy>all</invalidation-strategy>
+            
+            <autostart>true</autostart>
+            
+        </near-scheme>
+        
+        <distributed-scheme>
+            
+            <scheme-name>recentlydownloaded-distributed-overflow</scheme-name>
+            
+            <service-name>RecentlyDownloadedFilesDistributedCache</service-name>
+            
+            <thread-count>4</thread-count>
+            
+            <backing-map-scheme>
+                
+                <overflow-scheme>
+                    
+                    <scheme-ref>recentlydownloaded-overflow</scheme-ref>
+                    
+                </overflow-scheme>
+                
+            </backing-map-scheme>
+            
+            <autostart>true</autostart>
+            
+        </distributed-scheme>
+        
+        <overflow-scheme>
+            
+            <scheme-name>recentlydownloaded-overflow</scheme-name>
+            
+            <front-scheme>
+                
+                <local-scheme>
+                    
+                    <scheme-ref>accounts-properties-local</scheme-ref>
+                    
+                </local-scheme>
+                
+            </front-scheme>
+            
+            <back-scheme>
+                
+                <external-scheme>
+                    
+                    <scheme-ref>recentlydownloaded-external</scheme-ref>
+                    
+                </external-scheme>
+                
+            </back-scheme>
+            
+            <autostart>true</autostart>
+            
+        </overflow-scheme>
+        
+        <external-scheme>
+            
+            <scheme-name>recentlydownloaded-external</scheme-name>
+            
+            <nio-file-manager>
+                
+                <directory>/home/arpit/2021_nov_st/SecureTransport/var/tmp/tm/coherence-offheap-cache-disk</directory>
+                
+                <initial-size>10MB</initial-size>
+                
+                <maximum-size>512MB</maximum-size>
+                
+            </nio-file-manager>
+            
+            <autostart>true</autostart>
+            
+            <high-units>20000</high-units>
+            
+        </external-scheme>
+        
+        <distributed-scheme>
+            
+            <scheme-name>recentlydownloaded-distributed-admin</scheme-name>
+            
+            <service-name>RecentlyDownloadedFilesDistributedCache</service-name>
+            
+            <thread-count>2</thread-count>
+            
+            <backing-map-scheme>
+                
+                <local-scheme>
+                    
+                    <scheme-ref>accounts-properties-local</scheme-ref>
+                    
+                </local-scheme>
+                
+            </backing-map-scheme>
+            
+            <autostart>true</autostart>
+            
+        </distributed-scheme>
+        
+    </caching-schemes>
+    
+</cache-config>

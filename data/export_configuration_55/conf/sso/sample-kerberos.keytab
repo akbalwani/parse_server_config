@@ -1,0 +1,9 @@
+Replace here the .keytab file content
+
+In order to generate the .keytab file execute the following command:
+
+1) For Windows OS the command is:
+    ktpass -princ HTTP/<FQDN>@<realm> -mapuser <SPN> -pass <password> -out C:\key.keytab -ptype KRB5_NT_PRINCIPAL -crypto AES256-SHA1
+
+2) For Unix OS the command is:
+    kadmin

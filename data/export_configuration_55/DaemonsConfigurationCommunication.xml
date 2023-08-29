@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DaemonsConfigurationCommunication>
+                
+            
+    <KeyStore file="lib/certs/jmx_keystore" keyAlgorithm="SunX509" password="" trustAlgorithm="SunX509"/>
+                
+            
+    <AS2 port="9994">
+                        
+                
+        <Connection maxConnectionRetries="10" retriesInterval="1000"/>
+                        
+                
+        <Startup maxInitRetries="300" retriesInterval="1000"/>
+                        
+            
+    </AS2>
+                
+            
+    <FTP port="9996">
+                        
+                
+        <Connection maxConnectionRetries="10" retriesInterval="1000"/>
+                        
+                
+        <Startup maxInitRetries="300" retriesInterval="1000"/>
+                        
+            
+    </FTP>
+                
+            
+    <SSH port="9995">
+                        
+                
+        <Connection maxConnectionRetries="10" retriesInterval="1000"/>
+                        
+                
+        <Startup maxInitRetries="300" retriesInterval="1000"/>
+                        
+            
+    </SSH>
+                
+            
+    <PESIT port="9998">
+                        
+                
+        <Connection maxConnectionRetries="10" retriesInterval="1000"/>
+                        
+                
+        <Startup maxInitRetries="300" retriesInterval="1000"/>
+                        
+            
+    </PESIT>
+                
+            
+    <HTTP port="9997">
+                        
+                
+        <Connection maxConnectionRetries="10" retriesInterval="1000"/>
+                        
+                
+        <Startup maxInitRetries="300" retriesInterval="1000"/>
+                        
+            
+    </HTTP>
+                
+        
+</DaemonsConfigurationCommunication>

@@ -1,0 +1,527 @@
+    
+    
+    
+<cache-config xmlns:element="class://com.oracle.coherence.environment.extensible.namespaces.XmlElementProcessingNamespaceContentHandler" element:introduce-cache-config="coherence-processingpattern-pof-cache-config.xml,hibernate-cache-config.xml">
+
+    <caching-scheme-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>FolderMonitor</cache-name>
+            
+            <scheme-name>FolderMonitorOverflowScheme</scheme-name>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>SiteCache</cache-name>
+            
+            <scheme-name>accounts-properties-near-overflow</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>250</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>IdfCache</cache-name>
+            
+            <scheme-name>accounts-properties-near-overflow</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>250</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>AccountLocalKeyCache</cache-name>
+            
+            <scheme-name>accounts-properties-near-overflow</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>100</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>AccountLocalPGPKeyCache</cache-name>
+            
+            <scheme-name>accounts-properties-near-overflow</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>100</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>CustomAttributesCache</cache-name>
+            
+            <scheme-name>accounts-properties-near-overflow</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>10000</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>DataTransformationCache</cache-name>
+            
+            <scheme-name>accounts-properties-near-overflow</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>2000</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>SubscriptionCache</cache-name>
+            
+            <scheme-name>accounts-properties-near-overflow</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>1000</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>TransferConfigurationCache</cache-name>
+            
+            <scheme-name>accounts-properties-near-overflow</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>2000</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>AccountCache</cache-name>
+            
+            <scheme-name>accounts-distributed-tm</scheme-name>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>LocalKeyCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>50</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>LoginCertificateCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>50</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>CertificateReferenceCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>100</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>TrustedCACertificateCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>20</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>PartnerCertificateCache</cache-name>
+            
+            <scheme-name>accounts-properties-near-overflow</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>20</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>LocalPGPKeyCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>50</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>PartnerPGPKeyCache</cache-name>
+            
+            <scheme-name>accounts-properties-near-overflow</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>10</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>ApplicationCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>500</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>BusinessUnitCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>500</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>RouteCache</cache-name>
+            
+            <scheme-name>accounts-properties-near-overflow</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>250</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>AddressBookSourceCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>50</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>AddressBookUserCache</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>5000</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            
+            <cache-name>LoginRestrictionCache</cache-name>
+            
+            <scheme-name>accounts-properties-near-overflow</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>250</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+        <cache-mapping>
+            <!--
+      Entity cache configuration.
+      -->
+            
+            <cache-name>*</cache-name>
+            
+            <scheme-name>hibernate-near</scheme-name>
+            
+            <init-params>
+                
+                <init-param>
+                    
+                    <param-name>size-limit</param-name>
+                    
+                    <param-value>1000</param-value>
+                    
+                </init-param>
+                
+            </init-params>
+            
+        </cache-mapping>
+        
+    </caching-scheme-mapping>
+    
+    <caching-schemes>
+        
+        <local-scheme>
+            
+            <scheme-name>FolderMonitorMemoryLimitedScheme</scheme-name>
+            
+            <high-units>1000</high-units>
+            
+            <eviction-policy>LRU</eviction-policy>
+            
+        </local-scheme>
+        
+        <external-scheme>
+            
+            <scheme-name>FolderMonitorDiskLimitedScheme</scheme-name>
+            
+            <nio-file-manager>
+                
+                <directory>/home/arpit/2021_nov_st/SecureTransport/var/tmp/tm/coherence-offheap-cache-disk</directory>
+                
+                <initial-size>10MB</initial-size>
+                
+                <maximum-size>1GB</maximum-size>
+                
+            </nio-file-manager>
+            
+            <high-units>1000000</high-units>
+            
+        </external-scheme>
+        
+        <overflow-scheme>
+            
+            <scheme-name>FolderMonitorOverflowScheme</scheme-name>
+            
+            <front-scheme>
+                
+                <local-scheme>
+                    
+                    <scheme-ref>FolderMonitorMemoryLimitedScheme</scheme-ref>
+                    
+                </local-scheme>
+                
+            </front-scheme>
+            
+            <back-scheme>
+                
+                <external-scheme>
+                    
+                    <scheme-ref>FolderMonitorDiskLimitedScheme</scheme-ref>
+                    
+                </external-scheme>
+                
+            </back-scheme>
+            
+        </overflow-scheme>
+        
+    </caching-schemes>
+    
+</cache-config>

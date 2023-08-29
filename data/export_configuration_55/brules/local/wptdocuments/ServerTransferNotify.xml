@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This is a sample rule to illustrate how server initiated transfer failures can be trapped. One can trap a last retry or a permanent failure to
+send notifications. -->
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd" name="ServerTransferNotify.xml">
+    <rule name="ServerTransferNotify" type="static" precedence="99">
+        <condition>
+            <expression>
+                <expression>
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Incoming error</value>
+                    </item>
+                    <operator name="or"/>
+                    <item>
+                        <attribute>EventType</attribute>
+                        <comparator name="equal" />
+                        <value>Outgoing error</value>
+                    </item>
+                </expression>
+                <operator name="and"/>
+                <expression>
+                    <item>
+                        <attribute>DXAGENT_SERVER_TRANSFER_IS_PERMANENT_FAILURE</attribute>
+                        <comparator name="equal" />
+                        <value>1</value>
+                    </item>
+                    <operator name="or"/>
+                    <item>
+                        <attribute>DXAGENT_SERVER_TRANSFER_IS_LAST_CHANCE</attribute>
+                        <comparator name="equal" />
+                        <value>1</value>
+                    </item>
+	        </expression>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="" streamaccess="none" class="com.tumbleweed.st.server.mailer.agent.EmailNotification">
+                <params>
+                    <param>
+                        <param-name>messagetemplate</param-name>
+                        <param-value>PushDeliveryFailure.xhtml</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+</brpackage>
+

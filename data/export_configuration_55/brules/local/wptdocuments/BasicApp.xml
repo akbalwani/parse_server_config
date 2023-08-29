@@ -1,0 +1,26 @@
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ name="BasicApp.xml" version="1.0"
+ xsi:noNamespaceSchemaLocation="businessrules.xsd">
+    <rule name="BasicAppAgent" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal"/>
+                    <value>Application - Incoming</value>
+                </item>
+                <operator name="and"/>
+                <item>
+                    <attribute>DXAGENT_APPLICATION_TYPE</attribute>
+                    <comparator name="equal"/>
+                    <value>Basic</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" class="com.tumbleweed.st.server.basicapp.agents.BasicAppAgent"/>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+		
+</brpackage>

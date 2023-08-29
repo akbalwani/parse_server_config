@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<!-- @(#) $Id: attrtype.xml,v 1.2 2004-08-20 02:17:26 eijih Exp $ -->
+
+<!-- Do not delete the SecureTransport VERSION line below. -->
+<!-- ~VERSION~ 1 -->
+
+<!-- Business Rules system event attribute type configurations file -->
+
+<bruleseventconfig version="1.0">
+
+    <attributeclasses>
+
+	<!--
+	    define all classes that provide implementations for all attribute types.
+	-->
+
+	<attributetype name="brulesstring" class="com.valicert.brules.rulesengine.attribute.BRulesString"/>
+	<attributetype name="brulesnumber" class="com.valicert.brules.rulesengine.attribute.BRulesNumber"/>
+	<attributetype name="currenttime" class="com.valicert.brules.rulesengine.attribute.CurrentTime"/>
+	<attributetype name="brulestrue" class="com.valicert.brules.rulesengine.attribute.BRulesTrue"/>
+	<attributetype name="limitlengh2p10" class="com.valicert.brules.rulesengine.attribute.BRulesStringLength"/>
+
+    </attributeclasses>
+
+
+    <attributetypes>
+
+	<!--
+	    assign attribute types for all attributes and system attributes possibly 
+	    contained in an event.
+
+	    if one attribute is not associated with an attribute type here, it is 
+	    considered having "brulesstring" type.
+	-->
+
+	<attribute name="EventType" type="brulesstring"/>
+	<attribute name="DXAGENT_CLIENTPID" type="brulesnumber"/>
+	<attribute name="DXAGENT_HTTP_CONTENT_LENGTH" type="brulesnumber"/>
+	<attribute name="DXAGENT_USERGID" type="brulesnumber"/>
+	<attribute name="DXAGENT_USERUID" type="brulesnumber"/>
+	<attribute name="DXAGENT_LOGINNAME" type="limitlengh2p10"/>
+	<attribute name="DXAGENT_TRANSFERRED_BYTES" type="brulesnumber"/>
+
+	<systemattribute name="CurrentTime" type="currenttime"/>
+	<systemattribute name="True" type="brulestrue"/>
+
+    </attributetypes>
+
+</bruleseventconfig>
+

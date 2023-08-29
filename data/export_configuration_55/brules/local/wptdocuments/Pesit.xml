@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brpackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:noNamespaceSchemaLocation="businessrules.xsd" name="Pesit.xml">
+    
+     <rule name="PesitCitValidation" type="static" precedence="15">
+        <condition>
+            <expression>
+             <item>
+                 <attribute>DXAGENT_CLIENT</attribute>
+                 <comparator name="equal"/>
+                 <value>pesit</value>
+             </item>
+             <operator name="and" />
+             <expression>
+                 <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Incoming start</value>
+                </item>
+               <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Incoming end</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Incoming error</value>
+                </item>
+                <operator name="or" />               
+                 <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Outgoing start</value>
+                </item>
+                <operator name="or" />               
+                 <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Outgoing end</value>
+                </item>
+                <operator name="or" />               
+                 <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Outgoing error</value>
+                </item>
+               <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FTP Cmd - RETR</value>
+                </item>
+               <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FTP Cmd - STOR</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FTP Cmd - SIZE</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Pesit resume</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Pesit pause</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Pesit idf</value>
+                </item>
+            </expression>
+        </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.pesit.agent.IdfMappingAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+
+     <rule name="PesitSitValidation" type="static" precedence="15">
+        <condition>
+            <expression>
+             <item>
+                 <attribute>DXAGENT_CLIENT</attribute>
+                 <comparator name="equal"/>
+                 <value>server</value>
+             </item>
+             <operator name="and" />
+             <item>
+                 <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+                 <comparator name="equal"/>
+                 <value>pesit</value>
+             </item>
+             <operator name="and" />
+             <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Incoming start</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Incoming end</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Incoming error</value>
+                </item>
+                <operator name="or" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>FTP Cmd - STOR</value>
+                </item>
+             </expression>
+        </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.pesit.agent.IdfMappingAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.Continue">
+                <params>
+                    <param>
+                        <param-name>continue</param-name>
+                        <param-value>"0"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+            <inprocess-agent id="3" executeafter="2" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+    
+    <rule name="IdfCitCleanup" type="static" precedence="14">
+        <condition>
+        	<expression>
+	            <item>
+	                <attribute>DXAGENT_CLIENT</attribute>
+	                <comparator name="equal"/>
+	                <value>pesit</value>
+	            </item>
+	            <operator name="and" />
+	            <expression>
+	               <item>
+	                   <attribute>EventType</attribute>
+	                   <comparator name="equal" />
+	                   <value>Incoming start</value>
+	               </item>
+	               <operator name="or" />
+	               <item>
+	                   <attribute>EventType</attribute>
+	                   <comparator name="equal" />
+	                   <value>Pesit idf</value>
+	               </item>
+	           </expression>
+        	</expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.pesit.agent.IdfCleanupAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+    
+    <rule name="IdfSitCleanup" type="static" precedence="14">
+        <condition>
+        	<expression>
+	            <item>
+	                 <attribute>DXAGENT_CLIENT</attribute>
+	                 <comparator name="equal"/>
+	                 <value>server</value>
+             	</item>
+            	<operator name="and" />
+	            <item>
+	                 <attribute>DXAGENT_SITE_PROTOCOL</attribute>
+	                 <comparator name="equal"/>
+	                 <value>pesit</value>
+	            </item>
+	            <operator name="and" />
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Server Transfer - Pull</value>
+                </item>
+        	</expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.pesit.agent.IdfCleanupAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+    
+    <rule name="IdfListFiles" type="static" precedence="17">
+        <condition>
+            <expression>
+	            <item>
+	                <attribute>DXAGENT_CLIENT</attribute>
+	                <comparator name="equal"/>
+	                <value>pesit</value>
+	            </item>
+            <operator name="and" />
+               <item>
+                   <attribute>EventType</attribute>
+                   <comparator name="equal" />
+                   <value>Pesit idf</value>
+               </item>
+            <operator name="and" />
+               <item>
+                   <attribute>DXAGENT_PESIT_TRANSFER_DIRECTION</attribute>
+                   <comparator name="equal" />
+                   <value>outgoing</value>
+               </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.pesit.agent.IdfListAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+
+    <rule name="Pesit_Pause" type="static" precedence="30">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Pesit pause</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="all" wait="yes" class="com.tumbleweed.st.server.tm.agents.TimeStamp" />
+            <inprocess-agent id="3" executeafter="2" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.appframework.TransferLogAgent"/>
+        </action>
+    </rule>
+    <rule name="Pesit_Resume" type="static" precedence="30">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Pesit resume</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="all" wait="yes" class="com.tumbleweed.st.server.tm.agents.TimeStamp" />
+            <inprocess-agent id="3" executeafter="2" streamaccess="none" wait="yes" class="com.axway.st.server.pesit.tm.agent.ResumedTransferLogAgent"/>
+        </action>
+    </rule>
+    <rule name="PesitSaveMap" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Pesit savemap</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.pesit.tm.agent.PesitMapAgent" />
+        </action>
+    </rule>
+    <rule name="Remove_map" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Pesit clearmap</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.pesit.tm.agent.PesitMapAgent">
+                <params>
+                    <param>
+                        <param-name>PesitMapDeleteFile</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    <rule name="Retrieve_map" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Pesit getmap</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.pesit.tm.agent.PesitMapAgent" />
+        </action>
+    </rule>
+    <rule name="PeSIT_Config" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>User Configuration</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_CLIENT</attribute>
+                    <comparator name="equal" />
+                    <value>pesit</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" class="com.tumbleweed.st.server.tm.agents.PesitUserConfigAgent" />
+        </action>
+    </rule>
+    <rule name="PeSIT_PreConnect" type="static" precedence="100">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Pesit PreConnection</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_CLIENT</attribute>
+                    <comparator name="equal" />
+                    <value>pesit</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" class="com.tumbleweed.st.server.tm.agents.PesitPreConnectAgent" />
+        </action>
+    </rule>
+    <rule name="PeSIT_CertPreConfig" type="static" precedence="15">
+        <condition>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Certificate Verification</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_CLIENT</attribute>
+                    <comparator name="equal" />
+                    <value>pesit</value>
+                </item>
+            </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" class="com.axway.st.server.pesit.tm.agent.PesitCertPreConfigAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+    <rule name="PesitRouteCheck" type="static" precedence="19">
+        <condition>
+        <expression>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Incoming start</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_CLIENT</attribute>
+                    <comparator name="equal" />
+                    <value>pesit</value>
+                </item>
+            </expression>
+            <operator name="or"/>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Pesit resume</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_TRANSFER_TYPE</attribute>
+                    <comparator name="equal" />
+                    <value>incoming</value>
+                </item>
+            </expression>
+            <operator name="or"/>
+            <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Incoming end</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_IS_RESUBMIT_CALL</attribute>
+                    <comparator name="equal" />
+                    <value>1</value>
+                </item>
+                <operator name="and" />
+                <item>
+                    <attribute>DXAGENT_CLIENT</attribute>
+                    <comparator name="equal" />
+                    <value>pesit</value>
+                </item>
+            </expression>
+        </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" class="com.axway.st.server.pesit.agent.PesitRouteTransferAcceptorAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+    <rule name="IdfRetrieve" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Pesit idf</value>
+            </item>
+            <operator name="and" />
+            <item>
+                <attribute>DXAGENT_CLIENT</attribute>
+                <comparator name="equal" />
+                <value>pesit</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="all" class="com.axway.st.server.pesit.agent.IdfRetrieveAgent" />
+        </action>
+    </rule>
+    <rule name="PesitAck" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Pesit ack</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" class="com.axway.st.server.pesit.tm.agent.PesitAcknowledgeTransferAgent" />
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" class="com.tumbleweed.st.server.tm.agents.NextPrecedence" />
+        </action>
+    </rule>
+    
+    <rule name="PesitSessionInitialization" type="static" precedence="50">
+        <condition>
+            <expression>
+             <item>
+                 <attribute>DXAGENT_CLIENT</attribute>
+                 <comparator name="equal"/>
+                 <value>pesit</value>
+             </item>
+             <operator name="and" />
+             <expression>
+                <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Incoming end</value>
+                </item>
+                <operator name="or" />               
+                 <item>
+                    <attribute>EventType</attribute>
+                    <comparator name="equal" />
+                    <value>Outgoing end</value>
+                </item>
+            </expression>
+        </expression>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.pesit.tm.agent.PesitSessionInitializationAgent" >
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+
+            <inprocess-agent id="2" executeafter="1" streamaccess="none" wait="yes" class="com.tumbleweed.st.server.tm.agents.NextPrecedence"/>
+        </action>
+    </rule>
+    
+    <rule name="PesitReadFileMetadata" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Pesit readFileMetadata</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.pesit.tm.agent.PesitFileMetadataAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule>
+    
+    <rule name="PesitSaveFileMetadata" type="static" precedence="100">
+        <condition>
+            <item>
+                <attribute>EventType</attribute>
+                <comparator name="equal" />
+                <value>Pesit saveFileMetadata</value>
+            </item>
+        </condition>
+        <action Order="yes">
+            <inprocess-agent id="1" executeafter="" streamaccess="none" wait="yes" class="com.axway.st.server.pesit.tm.agent.PesitFileMetadataAgent">
+                <params>
+                    <param>
+                        <param-name>Impersonation</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                    <param>
+                        <param-name>PesitSaveFileMetadata</param-name>
+                        <param-value>"true"</param-value>
+                    </param>
+                </params>
+            </inprocess-agent>
+        </action>
+    </rule> 
+</brpackage>
